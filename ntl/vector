@@ -1,0 +1,290 @@
+#pragma once
+
+#include <ntddk.h>
+
+#include "ntl"
+#include "allocator"
+
+namespace ntl {
+
+    template<typename T, typename Allocator = ntl::allocator<T>>
+    class vector final {
+    public:
+        using value_type = T;
+        using size_type = SIZE_T;
+        using difference_type = SSIZE_T;
+        using reference = value_type&;
+        using const_reference = value_type const&;
+        using pointer = T*;
+        using const_pointer = T const*;
+
+        class iterator {
+        };
+
+        class const_iterator {
+        };
+
+        vector()
+            : begin_(nullptr)
+            , end_(nullptr)
+            , capacity_(0)
+        {}
+
+        explicit vector(size_type count) {
+            // TODO
+        }
+
+        vector(size_type count, T const &value) {
+            // TODO
+        }
+
+        template<typename II>
+        vector(II first, II last) {
+            // TODO
+        }
+
+        vector(vector const &other) {
+            // TODO
+        }
+
+        vector(vector &&other)
+            : begin_(other.begin_)
+            , end_(other.end_)
+            , capacity_(other.capacity_)
+        {
+            other.begin_ = nullptr;
+            other.end_ = nullptr;
+            other.capacity_ = nullptr;
+        }
+
+        ~vector() {
+            clear();
+        }
+
+        vector& operator=(vector const &other) {
+            // TODO
+        }
+
+        vector& operator=(vector &&other) {
+            clear();
+            swap(other);
+        }
+
+        void assign(size_type count, T const &value) {
+            // TODO
+        }
+
+        template<typename II>
+        void assign(II first, II last) {
+            // TODO
+        }
+
+        reference at(size_type position) {
+            // TODO
+        }
+
+        const_reference at(size_type) const {
+            // TODO
+        }
+
+        reference operator[](size_type position) {
+            // TODO
+        }
+
+        const_reference operator[](size_type) const {
+            // TODO
+        }
+
+        reference front() {
+            // TODO
+        }
+
+        const_reference front() const {
+            // TODO
+        }
+
+        reference back() {
+            // TODO
+        }
+
+        const_reference back() const {
+            // TODO
+        }
+
+        pointer data() {
+            // TODO
+        }
+
+        const_pointer data() const {
+            // TODO
+        }
+
+        iterator begin() {
+            // TODO
+        }
+
+        const_iterator begin() const {
+            // TODO
+        }
+
+        const_iterator cbegin() const {
+            // TODO
+        }
+
+        iterator end() {
+            // TODO
+        }
+
+        const_iterator end() const {
+            // TODO
+        }
+
+        const_iterator cend() const {
+            // TODO
+        }
+
+        iterator rbegin() {
+            // TODO
+        }
+
+        const_iterator rbegin() const {
+            // TODO
+        }
+
+        const_iterator crbegin() const {
+            // TODO
+        }
+
+        iterator rend() {
+            // TODO
+        }
+
+        const_iterator rend() const {
+            // TODO
+        }
+
+        const_iterator crend() const {
+            // TODO
+        }
+
+        bool empty() const {
+            return begin() == end();
+        }
+
+        size_type size() const {
+            return ntl::distance(begin(), end());
+        }
+
+        size_type max_size() const {
+            // TODO
+        }
+
+        void reserve(size_type new_capacity) {
+            // TODO
+        }
+
+        size_type capacity() const {
+            return capacity_;
+        }
+
+        void shrink_to_fit() {
+            // TODO
+        }
+
+        void clear() {
+            // TODO
+        }
+
+        iterator insert(const_iterator position, T const &value) {
+            // TODO
+        }
+
+        iterator insert(const_iterator position, T &&value) {
+            // TODO
+        }
+
+        iterator insert(const_iterator position, size_type count, T const &value) {
+            // TODO
+        }
+
+        template<typename II>
+        iterator insert(const_iterator position, II first, II last) {
+            // TODO
+        }
+
+        template<typename ...Args>
+        iterator emplace(const_iterator position, Args &&...args) {
+            // TODO
+        }
+
+        iterator erase(const_iterator position) {
+            // TODO
+        }
+
+        iterator erase(const_iterator first, const_iterator last) {
+            // TODO
+        }
+
+        void push_back(T &&value) {
+            // TODO
+        }
+
+        template<typename ...Args>
+        reference emplace_back(Args &&...args) {
+            // TODO
+        }
+
+        void pop_back() {
+            // TODO
+        }
+
+        void resize(size_type count) {
+            // TODO
+        }
+
+        void resize(size_type count, value_type const &value) {
+            // TODO
+        }
+
+        void swap(vector &other) {
+            ntl::swap(begin_, other.begin_);
+            ntl::swap(end_, other.end_);
+            ntl::swap(capacity_, other.capacity_);
+        }
+
+    private:
+        T *begin_, *end_;
+        size_type capacity_;
+    };
+
+    template<typename T, typename Allocator>
+    bool operator==(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+    template<typename T, typename Allocator>
+    bool operator!=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+    template<typename T, typename Allocator>
+    bool operator<(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+    template<typename T, typename Allocator>
+    bool operator<=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+    template<typename T, typename Allocator>
+    bool operator>(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+    template<typename T, typename Allocator>
+    bool operator>=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+        // TODO
+    }
+
+}
