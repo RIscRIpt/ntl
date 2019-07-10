@@ -2,14 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="ntl.cpp" />
-    <ClCompile Include="ntl" />
-    <ClCompile Include="iterator" />
-    <ClCompile Include="allocator" />
-    <ClCompile Include="system" />
-    <ClCompile Include="type_traits" />
-    <ClCompile Include="utility" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector" />
+    <ClInclude Include="test.h" />
   </ItemGroup>
 </Project>

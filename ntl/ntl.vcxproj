@@ -152,15 +152,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="allocator" />
-    <ClCompile Include="iterator" />
     <ClCompile Include="ntl.cpp" />
-    <ClCompile Include="ntl" />
-    <ClCompile Include="system" />
-    <ClCompile Include="type_traits" />
-    <ClCompile Include="utility" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algorithm" />
+    <ClInclude Include="allocator" />
+    <ClInclude Include="ntl" />
+    <ClInclude Include="system" />
+    <ClInclude Include="type_traits" />
+    <ClInclude Include="utility" />
     <ClInclude Include="vector" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
