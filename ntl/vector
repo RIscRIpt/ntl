@@ -2,6 +2,7 @@
 
 #include "system"
 #include "ntl"
+#include "algorithm"
 #include "allocator"
 
 namespace ntl {
@@ -291,17 +292,23 @@ namespace ntl {
 
     template<typename T, typename Allocator>
     bool operator==(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+        if (lhs.size() != rhs.size()) {
+            return false;
+        }
+        return equals(lhs.begin(), lhs.end(), rhs.begin());
     }
 
     template<typename T, typename Allocator>
     bool operator!=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+        if (lhs.size() != rhs.size()) {
+            return true;
+        }
+        return !equals(lhs.begin(), lhs.end(), rhs.begin());
     }
 
     template<typename T, typename Allocator>
     bool operator<(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+        return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
     template<typename T, typename Allocator>
@@ -316,7 +323,7 @@ namespace ntl {
 
     template<typename T, typename Allocator>
     bool operator>=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+        return !(lhs < rhs);
     }
 
 }
