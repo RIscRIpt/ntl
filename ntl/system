@@ -6,3 +6,10 @@ extern "C" {
 #include <ntddk.h>
 #pragma warning(pop)
 }
+
+namespace ntl {
+
+    using size_t = SIZE_T;
+    using ptrdiff_t = SSIZE_T;
+
+}
