@@ -8,8 +8,8 @@ namespace ntl {
     class allocator final {
     public:
         using value_type = T;
-        using size_type = SIZE_T;
-        using difference_type = SSIZE_T;
+        using size_type = ntl::size_t;
+        using difference_type = ntl::ptrdiff_t;
 
         constexpr allocator() {}
 
