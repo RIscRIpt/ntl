@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ntddk.h>
+#include "system"
 
 namespace ntl {
 
@@ -11,39 +11,41 @@ namespace ntl {
         using size_type = SIZE_T;
         using difference_type = SSIZE_T;
 
-        constexpr allocator() {
-            // TODO
-        }
+        constexpr allocator() {}
 
-        constexpr allocator(allocator const &other) {
-            // TODO
-        }
+        constexpr allocator(allocator const &other) {}
 
         template<typename U>
-        constexpr allocator(allocator<U> const &other) {
-            // TODO
-        }
+        constexpr allocator(allocator<U> const &other) {}
 
-        ~allocator() {
-            // TODO
-        }
+        ~allocator() {}
 
         T* allocate(size_type n) {
-            // TODO
+            return new T[n];
         }
 
         void deallocate(T *p, size_type n) {
-            // TODO
+            delete[] p;
         }
     };
 
     template<typename T1, typename T2>
     bool operator==(allocator<T1> const &lhs, allocator<T2> const &rhs) {
-        // TODO
+        return false;
     }
 
-    template< typename T1, typename T2 >
+    template<typename T>
+    bool operator==(allocator<T> const &lhs, allocator<T> const &rhs) {
+        return true;
+    }
+
+    template<typename T1, typename T2>
     bool operator!=(allocator<T1> const &lhs, allocator<T2> const &rhs) {
-        // TODO
+        return true;
+    }
+
+    template<typename T>
+    bool operator!=(allocator<T> const &lhs, allocator<T> const &rhs) {
+        return false;
     }
 }

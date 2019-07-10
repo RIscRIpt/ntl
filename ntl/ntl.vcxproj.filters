@@ -5,6 +5,9 @@
     <ClCompile Include="ntl" />
     <ClCompile Include="iterator" />
     <ClCompile Include="allocator" />
+    <ClCompile Include="system" />
+    <ClCompile Include="type_traits" />
+    <ClCompile Include="utility" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector" />

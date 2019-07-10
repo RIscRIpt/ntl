@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ntddk.h>
-
+#include "system"
 #include "ntl"
 #include "allocator"
 
@@ -28,18 +27,32 @@ namespace ntl {
             : begin_(nullptr)
             , end_(nullptr)
             , capacity_(0)
+            , allocator_()
         {}
 
-        explicit vector(size_type count) {
+        explicit vector(Allocator const &allocator)
+            : begin_(nullptr)
+            , end_(nullptr)
+            , capacity_(0)
+            , allocator_(allocator)
+        {}
+
+        vector(size_type count, T const &value, Allocator const &allocator = Allocator())
+            : vector(allocator)
+        {
             // TODO
         }
 
-        vector(size_type count, T const &value) {
+        explicit vector(size_type count, Allocator const &allocator = Allocator())
+            : vector(allocator)
+        {
             // TODO
         }
 
         template<typename II>
-        vector(II first, II last) {
+        vector(II first, II last, Allocator const &allocator = Allocator())
+            : vector(allocator)
+        {
             // TODO
         }
 
@@ -47,14 +60,32 @@ namespace ntl {
             // TODO
         }
 
+        vector(vector const &other, Allocator const &allocator = Allocator())
+            : vector(allocator)
+        {
+            // TODO
+        }
+
         vector(vector &&other)
             : begin_(other.begin_)
             , end_(other.end_)
             , capacity_(other.capacity_)
+            , allocator_(other.allocator_)
         {
             other.begin_ = nullptr;
             other.end_ = nullptr;
-            other.capacity_ = nullptr;
+            other.capacity_ = 0;
+        }
+
+        vector(vector &&other, Allocator const &allocator)
+            : begin_(other.begin_)
+            , end_(other.end_)
+            , capacity_(other.capacity_)
+            , allocator_(allocator)
+        {
+            other.begin_ = nullptr;
+            other.end_ = nullptr;
+            other.capacity_ = 0;
         }
 
         ~vector() {
@@ -255,6 +286,7 @@ namespace ntl {
     private:
         T *begin_, *end_;
         size_type capacity_;
+        Allocator allocator_;
     };
 
     template<typename T, typename Allocator>
