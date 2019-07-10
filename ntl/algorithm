@@ -2,6 +2,8 @@
 
 namespace ntl {
     
+#pragma region equal
+
     template<typename II1, typename II2>
     constexpr bool equal(II1 first1, II1 last1, II2 first2) {
         for (auto i = first1, j = first2; i != last1; ++i, ++j) {
@@ -41,5 +43,32 @@ namespace ntl {
         }
         return true;
     }
+
+#pragma endregion
+#pragma region lexicographical_compare
+
+    template<typename II1, typename II2>
+    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2) {
+        for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
+            if (*first1 < *first2)
+                return true;
+            if (*first2 < *first1)
+                return false;
+        }
+        return first1 == last1 && first2 != last2;
+    }
+
+    template<typename II1, typename II2, typename Compare>
+    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2, Compare compare) {
+        for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
+            if (compare(*first1, *first2))
+                return true;
+            if (compare(*first2, *first1))
+                return false;
+        }
+        return first1 == last1 && first2 != last2;
+    }
+
+#pragma endregion
 
 }
