@@ -1,0 +1,25 @@
+#pragma once
+
+namespace ntl {
+    
+    template<typename II1, typename II2>
+    constexpr bool equal(II1 first1, II1 last1, II2 first2) {
+        // TODO
+    }
+
+    template<typename II1, typename II2, typename BinaryPredicate>
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, BinaryPredicate p) {
+        // TODO
+    }
+
+    template<typename II1, typename II2>
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2) {
+        // TODO
+    }
+
+    template<typename II1, typename II2, typename BinaryPredicate>
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2, BinaryPredicate p) {
+        // TODO
+    }
+
+}
