@@ -4,6 +4,7 @@
 #include "ntl"
 #include "algorithm"
 #include "allocator"
+#include "utility"
 
 namespace ntl {
 
@@ -11,6 +12,7 @@ namespace ntl {
     class vector final {
     public:
         using value_type = T;
+        using allocator_type = Allocator;
         using size_type = ntl::size_t;
         using difference_type = ntl::ptrdiff_t;
         using reference = value_type&;
@@ -24,6 +26,9 @@ namespace ntl {
         class const_iterator {
         };
 
+        using reverse_iterator = ntl::reverse_iterator<iterator>;
+        using const_reverse_iterator = ntl::reverse_iterator<const_iterator>;
+
         vector()
             : begin_(nullptr)
             , end_(nullptr)
@@ -31,27 +36,27 @@ namespace ntl {
             , allocator_()
         {}
 
-        explicit vector(Allocator const &allocator)
+        explicit vector(allocator_type const &allocator)
             : begin_(nullptr)
             , end_(nullptr)
             , capacity_(0)
             , allocator_(allocator)
         {}
 
-        vector(size_type count, T const &value, Allocator const &allocator = Allocator())
+        vector(size_type count, value_type const &value, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
             // TODO
         }
 
-        explicit vector(size_type count, Allocator const &allocator = Allocator())
+        explicit vector(size_type count, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
             // TODO
         }
 
         template<typename II>
-        vector(II first, II last, Allocator const &allocator = Allocator())
+        vector(II first, II last, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
             // TODO
@@ -61,7 +66,7 @@ namespace ntl {
             // TODO
         }
 
-        vector(vector const &other, Allocator const &allocator = Allocator())
+        vector(vector const &other, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
             // TODO
@@ -78,7 +83,7 @@ namespace ntl {
             other.capacity_ = 0;
         }
 
-        vector(vector &&other, Allocator const &allocator)
+        vector(vector &&other, allocator_type const &allocator)
             : begin_(other.begin_)
             , end_(other.end_)
             , capacity_(other.capacity_)
@@ -102,101 +107,119 @@ namespace ntl {
             swap(other);
         }
 
-        void assign(size_type count, T const &value) {
-            // TODO
+        void assign(size_type count, value_type const &value) {
+            clear();
+            capacity_ = count;
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (auto p = begin_; p != end_; p++) {
+                new (p) value_type(value);
+            }
         }
 
         template<typename II>
         void assign(II first, II last) {
-            // TODO
+            clear();
+            capacity_ = ntl::distance(first, last);
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (auto p = begin_; p != end_; p++, ++first) {
+                new (p) value_type(*first);
+            }
         }
 
         reference at(size_type position) {
-            // TODO
+            if (position >= size()) {
+                ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
+            }
+            return begin_[position];
         }
 
-        const_reference at(size_type) const {
-            // TODO
+        const_reference at(size_type position) const {
+            if (position >= size()) {
+                ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
+            }
+            return begin_[position];
         }
 
         reference operator[](size_type position) {
-            // TODO
+            return begin_[position];
         }
 
-        const_reference operator[](size_type) const {
-            // TODO
+        const_reference operator[](size_type position) const {
+            return begin_[position];
         }
 
         reference front() {
-            // TODO
+            return *begin_;
         }
 
         const_reference front() const {
-            // TODO
+            return *begin_;
         }
 
         reference back() {
-            // TODO
+            return *(end_ - 1);
         }
 
         const_reference back() const {
-            // TODO
+            return *(end_ - 1);
         }
 
         pointer data() {
-            // TODO
+            return begin_;
         }
 
         const_pointer data() const {
-            // TODO
+            return begin_;
         }
 
         iterator begin() {
-            // TODO
+            return begin_;
         }
 
         const_iterator begin() const {
-            // TODO
+            return begin_;
         }
 
         const_iterator cbegin() const {
-            // TODO
+            return begin_;
         }
 
         iterator end() {
-            // TODO
+            return end_;
         }
 
         const_iterator end() const {
-            // TODO
+            return end_;
         }
 
         const_iterator cend() const {
-            // TODO
+            return end_;
         }
 
-        iterator rbegin() {
-            // TODO
+        reverse_iterator rbegin() {
+            return end_ - 1;
         }
 
-        const_iterator rbegin() const {
-            // TODO
+        const_reverse_iterator rbegin() const {
+            return end_ - 1;
         }
 
-        const_iterator crbegin() const {
-            // TODO
+        const_reverse_iterator crbegin() const {
+            return end_ - 1;
         }
 
-        iterator rend() {
-            // TODO
+        reverse_iterator rend() {
+            return begin_ - 1;
         }
 
-        const_iterator rend() const {
-            // TODO
+        const_reverse_iterator rend() const {
+            return begin_ - 1;
         }
 
-        const_iterator crend() const {
-            // TODO
+        const_reverse_iterator crend() const {
+            return begin_ - 1;
         }
 
         bool empty() const {
@@ -207,12 +230,15 @@ namespace ntl {
             return ntl::distance(begin(), end());
         }
 
-        size_type max_size() const {
-            // TODO
-        }
-
         void reserve(size_type new_capacity) {
-            // TODO
+            if (new_capacity <= capacity_) {
+                return;
+            }
+            vector new_vector(new_capacity, allocator_);
+            for (auto &&e : *this) {
+                new_vector.emplace_back(ntl::move(e));
+            }
+            swap(new_vector);
         }
 
         size_type capacity() const {
@@ -220,22 +246,34 @@ namespace ntl {
         }
 
         void shrink_to_fit() {
-            // TODO
+            if (size() == capacity_) {
+                return;
+            }
+            vector new_vector(size(), allocator_);
+            for (auto &&e : *this) {
+                new_vector.emplace_back(ntl::move(e));
+            }
+            swap(new_vector);
         }
 
         void clear() {
+            for (auto &e : *this)
+                e.~value_type();
+            allocator_.deallocate(begin_, capacity_);
+            begin_ = nullptr;
+            end_ = nullptr;
+            capacity_ = 0;
+        }
+
+        iterator insert(const_iterator position, value_type const &value) {
             // TODO
         }
 
-        iterator insert(const_iterator position, T const &value) {
+        iterator insert(const_iterator position, value_type &&value) {
             // TODO
         }
 
-        iterator insert(const_iterator position, T &&value) {
-            // TODO
-        }
-
-        iterator insert(const_iterator position, size_type count, T const &value) {
+        iterator insert(const_iterator position, size_type count, value_type const &value) {
             // TODO
         }
 
@@ -257,7 +295,7 @@ namespace ntl {
             // TODO
         }
 
-        void push_back(T &&value) {
+        void push_back(value_type &&value) {
             // TODO
         }
 
@@ -282,12 +320,13 @@ namespace ntl {
             ntl::swap(begin_, other.begin_);
             ntl::swap(end_, other.end_);
             ntl::swap(capacity_, other.capacity_);
+            ntl::swap(allocator_, other.allocator_);
         }
 
     private:
-        T *begin_, *end_;
+        pointer begin_, end_;
         size_type capacity_;
-        Allocator allocator_;
+        allocator_type allocator_;
     };
 
     template<typename T, typename Allocator>
