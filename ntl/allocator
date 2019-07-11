@@ -11,22 +11,35 @@ namespace ntl {
         using size_type = ntl::size_t;
         using difference_type = ntl::ptrdiff_t;
 
-        constexpr allocator() {}
+        constexpr explicit allocator(ULONG tag = NTL_TAG)
+            : tag_(tag)
+        {}
 
-        constexpr allocator(allocator const &other) {}
+        constexpr allocator(allocator const &other)
+            : tag_(other.tag_)
+        {}
 
         template<typename U>
-        constexpr allocator(allocator<U> const &other) {}
+        constexpr allocator(allocator<U> const &other)
+            : tag_(other.tag_)
+        {}
 
         ~allocator() {}
 
         T* allocate(size_type n) {
-            return new T[n];
+            T *result = ExAllocatePoolWithTag(NonPagedPoolNx, sizeof(T) * n, tag_);
+            if (!result) {
+                ExRaiseStatus(STATUS_FATAL_MEMORY_EXHAUSTION);
+            }
+            return result;
         }
 
         void deallocate(T *p, size_type n) {
-            delete[] p;
+            ExFreePoolWithTag(object, tag_);
         }
+
+    private:
+        ULONG tag_;
     };
 
     template<typename T1, typename T2>
@@ -36,7 +49,7 @@ namespace ntl {
 
     template<typename T>
     bool operator==(allocator<T> const &lhs, allocator<T> const &rhs) {
-        return true;
+        return lhs.tag_ == rhs.tag_;
     }
 
     template<typename T1, typename T2>
@@ -46,6 +59,6 @@ namespace ntl {
 
     template<typename T>
     bool operator!=(allocator<T> const &lhs, allocator<T> const &rhs) {
-        return false;
+        return lhs.tag_ != rhs.tag_;
     }
 }
