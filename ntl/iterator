@@ -1,0 +1,280 @@
+#pragma once
+
+#include "system"
+
+namespace ntl {
+
+#pragma region iterator_tag
+
+    struct input_iterator_tag {};
+    struct output_iterator_tag {};
+    struct forward_iterator_tag : public input_iterator_tag {};
+    struct bidirectional_iterator_tag : public forward_iterator_tag {};
+    struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+    struct contiguous_iterator_tag : public random_access_iterator_tag {};
+
+#pragma endregion
+#pragma region iterator_traits
+
+    template<typename T>
+    struct iterator_traits {
+        using difference_type = T::difference_type;
+        using value_type = T::value_type;
+        using pointer = T::pointer;
+        using reference = T::reference;
+        using iterator_category = T::iterator_category;
+    };
+
+#pragma endregion
+#pragma region iterator
+
+    template<
+        typename Category,
+        typename T,
+        typename Distance = ntl::ptrdiff_t,
+        typename Pointer = T*,
+        typename Reference = T&
+    >
+    class iterator {
+    public:
+        using value_type = T;
+        using distance_type = Distance;
+        using pointer = Pointer;
+        using reference = Reference;
+        using iterator_category = Category;
+
+        constexpr bool operator==(iterator const &rhs) {
+            return p_ == rhs.p_;
+        }
+
+        constexpr bool operator!=(iterator<I2> const &rhs) {
+            return p_ != rhs.p_;
+        }
+
+        constexpr bool operator<(iterator<I2> const &rhs) {
+            return p_ < rhs.p_;
+        }
+
+        constexpr bool operator<=(iterator<I2> const &rhs) {
+            return p_ <= rhs.p_;
+        }
+
+        constexpr bool operator>(iterator<I2> const &rhs) {
+            return p_ > rhs.p_;
+        }
+
+        constexpr bool operator>=(iterator<I2> const &rhs) {
+            return p_ >= rhs.p_;
+        }
+
+    protected:
+        pointer p_;
+    };
+
+#pragma endregion
+#pragma region random_access_iterator
+
+    template<
+        typename T,
+        typename Distance = ntl::ptrdiff_t,
+        typename Pointer = T*,
+        typename Reference = T&
+    >
+    class random_access_iterator
+        : public iterator<
+            random_access_iterator_tag,
+            T,
+            Distance,
+            Pointer,
+            Reference
+        >
+    {
+    public:
+        constexpr random_access_iterator() {}
+        constexpr random_access_iterator(pointer x) {
+            p_ = x;
+        }
+
+        constexpr random_access_iterator(random_access_iterator const &other)
+            : p_(other.p_)
+        {}
+
+        constexpr random_access_iterator& operator=(random_access_iterator const &other) {
+            p_ = other.p_;
+        }
+
+        constexpr reference operator*() const {
+            return *p_;
+        }
+
+        constexpr pointer operator->() const {
+            return p_;
+        }
+
+        constexpr value_type& operator[](difference_type n) const {
+            return p_[n];
+        }
+
+
+        constexpr random_access_iterator& operator++() {
+            ++p_;
+            return *this;
+        }
+
+        constexpr random_access_iterator& operator--() {
+            --p_;
+            return *this;
+        }
+
+        constexpr random_access_iterator operator++(int) {
+            auto t = p_;
+            ++p_;
+            return t;
+        }
+
+        constexpr random_access_iterator operator--(int) {
+            auto t = p_;
+            --p_;
+            return t;
+        }
+
+        constexpr random_access_iterator operator+(difference_type n) const {
+            return p_ + n;
+        }
+
+        constexpr random_access_iterator operator-(difference_type n) const {
+            return p_ - n;
+        }
+
+        constexpr random_access_iterator& operator+=(difference_type n) {
+            p_ += n;
+            return *this;
+        }
+
+        constexpr random_access_iterator& operator-=(difference_type n) {
+            p_ -= n;
+            return *this;
+        }
+    };
+
+#pragma endregion
+#pragma region reverse_iterator
+
+    template<typename I>
+    class reverse_iterator {
+    public:
+        using iterator_type = I;
+        using iterator_category = ntl::iterator_traits<iterator_type>::iterator_category;
+        using value_type = ntl::iterator_traits<iterator_type>::value_type;
+        using difference_type = ntl::iterator_traits<iterator_type>::difference_type;
+        using pointer = ntl::iterator_traits<iterator_type>::pointer;
+        using reference = ntl::iterator_traits<iterator_type>::reference;
+
+        constexpr reverse_iterator() {}
+        constexpr explicit reverse_iterator(iterator_type x) {
+            base_ = x;
+        }
+
+        constexpr reverse_iterator(reverse_iterator const &other)
+            : base_(other.base_)
+        {}
+
+        constexpr reverse_iterator& operator=(reverse_iterator const &other) {
+            base_ = other.base_;
+        }
+
+        constexpr iterator_type base() const {
+            return base_;
+        }
+
+        constexpr reference operator*() const {
+            return *(base - 1);
+        }
+
+        constexpr pointer operator->() const {
+            return ntl::addressof(operator*());
+        }
+
+        constexpr value_type& operator[](difference_type n) const {
+            return base_[-n - 1];
+        }
+
+
+        constexpr reverse_iterator& operator++() {
+            --base_;
+            return *this;
+        }
+
+        constexpr reverse_iterator& operator--() {
+            ++base_;
+            return *this;
+        }
+
+        constexpr reverse_iterator operator++(int) {
+            auto t = base_;
+            --base_;
+            return t;
+        }
+
+        constexpr reverse_iterator operator--(int) {
+            auto t = base_;
+            ++base_;
+            return t;
+        }
+
+        constexpr reverse_iterator operator+(difference_type n) const {
+            return base() - n;
+        }
+
+        constexpr reverse_iterator operator-(difference_type n) const {
+            return base() + n;
+        }
+
+        constexpr reverse_iterator& operator+=(difference_type n) {
+            base_ -= n;
+            return *this;
+        }
+
+        constexpr reverse_iterator& operator-=(difference_type n) {
+            base_ += n;
+            return *this;
+        }
+
+    protected:
+        iterator_type base_;
+    };
+
+
+    template<typename I1, typename I2>
+    constexpr bool operator==(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() == rhs.base();
+    }
+
+    template<typename I1, typename I2>
+    constexpr bool operator!=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() != rhs.base();
+    }
+
+    template<typename I1, typename I2>
+    constexpr bool operator<(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() < rhs.base();
+    }
+
+    template<typename I1, typename I2>
+    constexpr bool operator<=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() <= rhs.base();
+    }
+
+    template<typename I1, typename I2>
+    constexpr bool operator>(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() > rhs.base();
+    }
+
+    template<typename I1, typename I2>
+    constexpr bool operator>=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+        return lhs.base() >= rhs.base();
+    }
+
+#pragma endregion
+
+}

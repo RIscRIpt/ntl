@@ -1,0 +1,13 @@
+#pragma once
+
+namespace ntl {
+
+    template<typename T>
+    constexpr T* addressof(T& arg) {
+        // TODO
+    }
+
+    template<typename T>
+    const T* addressof(const T&&) = delete;
+
+}
