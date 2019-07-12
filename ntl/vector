@@ -5,6 +5,7 @@
 #include "algorithm"
 #include "allocator"
 #include "utility"
+#include "iterator"
 
 namespace ntl {
 
@@ -19,13 +20,8 @@ namespace ntl {
         using const_reference = value_type const&;
         using pointer = T*;
         using const_pointer = T const*;
-
-        class iterator {
-        };
-
-        class const_iterator {
-        };
-
+        class iterator : public ntl::random_access_iterator<value_type> {};
+        class const_iterator : public ntl::random_access_iterator<value_type const> {};
         using reverse_iterator = ntl::reverse_iterator<iterator>;
         using const_reverse_iterator = ntl::reverse_iterator<const_iterator>;
 
@@ -99,7 +95,11 @@ namespace ntl {
         }
 
         vector& operator=(vector const &other) {
-            // TODO
+            clear();
+            reserve(other.size());
+            for (auto const &e : other) {
+                push_back(e);
+            }
         }
 
         vector& operator=(vector &&other) {
