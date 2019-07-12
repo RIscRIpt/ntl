@@ -330,7 +330,7 @@ namespace ntl {
     };
 
     template<typename T, typename Allocator>
-    bool operator==(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+    bool operator==(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
         if (lhs.size() != rhs.size()) {
             return false;
         }
@@ -338,7 +338,7 @@ namespace ntl {
     }
 
     template<typename T, typename Allocator>
-    bool operator!=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+    bool operator!=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
         if (lhs.size() != rhs.size()) {
             return true;
         }
@@ -346,22 +346,29 @@ namespace ntl {
     }
 
     template<typename T, typename Allocator>
-    bool operator<(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+    bool operator<(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
         return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
     template<typename T, typename Allocator>
-    bool operator<=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+    bool operator<=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+        return !(lhs > rhs);
     }
 
     template<typename T, typename Allocator>
-    bool operator>(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
-        // TODO
+    bool operator>(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+        return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
+            [](vector<T, Allocator>::const_iterator a, vector<T, Allocator>::const_iterator b) {
+                if (*a > *b)
+                    return true;
+                if (*b > *a)
+                    return false;
+            }
+        );
     }
 
     template<typename T, typename Allocator>
-    bool operator>=(const vector<T, Allocator> &lhs, const vector<T, Allocator> &rhs) {
+    bool operator>=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
         return !(lhs < rhs);
     }
 
