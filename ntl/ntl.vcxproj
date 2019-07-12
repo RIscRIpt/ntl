@@ -157,6 +157,8 @@
   <ItemGroup>
     <ClInclude Include="algorithm" />
     <ClInclude Include="allocator" />
+    <ClInclude Include="iterator" />
+    <ClInclude Include="memory" />
     <ClInclude Include="ntl" />
     <ClInclude Include="system" />
     <ClInclude Include="type_traits" />
