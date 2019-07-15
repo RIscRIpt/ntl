@@ -42,30 +42,55 @@ namespace ntl {
         vector(size_type count, value_type const &value, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            // TODO
+            capacity_ = count;
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (size_t i = 0; i != capacity_; i++) {
+                push_back(value);
+            }
         }
 
         explicit vector(size_type count, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            // TODO
+            capacity_ = count;
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (size_t i = 0; i != capacity_; i++) {
+                push_back(value_type());
+            }
         }
 
         template<typename II>
         vector(II first, II last, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            // TODO
+            capacity_ = ntl::distance(first, last);
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (; first != last; ++first) {
+                push_back(*first);
+            }
         }
 
         vector(vector const &other) {
-            // TODO
+            capacity_ = other.size();
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (auto const &e : other) {
+                push_back(e);
+            }
         }
 
-        vector(vector const &other, allocator_type const &allocator = allocator_type())
+        vector(vector const &other, allocator_type const &allocator)
             : vector(allocator)
         {
-            // TODO
+            capacity_ = other.size();
+            begin_ = allocator_.allocate(capacity_);
+            end_ = begin_ + capacity_;
+            for (auto const &e : other) {
+                push_back(e);
+            }
         }
 
         vector(vector &&other)
@@ -234,9 +259,12 @@ namespace ntl {
             if (new_capacity <= capacity_) {
                 return;
             }
-            vector new_vector(new_capacity, allocator_);
+            vector new_vector(allocator_);
+            new_vector.capacity_ = new_capacity;
+            new_vector.begin_ = allocator_.allocate(new_capacity);
+            new_vector.end_ = new_vector.begin_ + new_capacity;
             for (auto &&e : *this) {
-                new_vector.emplace_back(ntl::move(e));
+                new_vector.push_back(ntl::move(e));
             }
             swap(new_vector);
         }
@@ -249,7 +277,8 @@ namespace ntl {
             if (size() == capacity_) {
                 return;
             }
-            vector new_vector(size(), allocator_);
+            vector new_vector(allocator_);
+            new_vector.reserve(size());
             for (auto &&e : *this) {
                 new_vector.emplace_back(ntl::move(e));
             }
@@ -296,24 +325,52 @@ namespace ntl {
         }
 
         void push_back(value_type &&value) {
-            // TODO
+            if (size() >= capacity()) {
+                size_type new_size = capacity() * 2;
+                if (!new_size) {
+                    new_size++;
+                }
+                reserve(new_size);
+            }
+            new (end_++) value_type(ntl::move(value));
         }
 
         template<typename ...Args>
         reference emplace_back(Args &&...args) {
-            // TODO
+            if (size() >= capacity()) {
+                size_type new_size = capacity() * 2;
+                if (!new_size) {
+                    new_size++;
+                }
+                reserve(new_size);
+            }
+            new (end_) value_type(ntl::forward<value_type>(args));
+            return *(end_++);
         }
 
         void pop_back() {
-            // TODO
+            if (!empty())
+                end_--;
         }
 
         void resize(size_type count) {
-            // TODO
+            resize(count, value_type());
         }
 
         void resize(size_type count, value_type const &value) {
-            // TODO
+            if (count <= size()) {
+                end_ = begin_ + count;
+            } else {
+                vector new_vector(allocator_);
+                new_vector.reserve(count);
+                for (auto &&e : *this) {
+                    new_vector.push_back(ntl::move(e));
+                }
+                for (size_type i = size(); i != count; i++) {
+                    new_vector.push_back(value);
+                }
+                swap(new_vector);
+            }
         }
 
         void swap(vector &other) {
