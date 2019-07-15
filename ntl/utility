@@ -5,15 +5,26 @@
 namespace ntl {
 
     template<typename T>
-    typename remove_reference<T>::type&& move(T &&t) {
-        return static_cast<typename remove_reference<T>::type&&>(t);
-    }
-
-    template<typename T>
     void swap(T &a, T &b) {
         T t = move(a);
         a = move(b);
         b = move(t);
+    }
+
+    template<typename T>
+    constexpr T&& forward(typename remove_reference_t<T> &t) {
+        return static_cast<T&&>(t);
+    }
+
+    template<typename T>
+    constexpr T&& forward(typename remove_reference_t<T> &&t) {
+        static_assert(!is_lvalue_reference_v<T>, "cannot forward an rvalue as an lvalue.");
+        return static_cast<T&&>(t);
+    }
+
+    template<typename T>
+    typename remove_reference_t<T>&& move(T &&t) {
+        return static_cast<typename remove_reference_t<T>&&>(t);
     }
 
 }
