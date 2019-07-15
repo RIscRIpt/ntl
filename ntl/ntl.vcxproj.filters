@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="ntl.cpp" />
-    <ClCompile Include="iterator" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector" />
@@ -13,5 +12,6 @@
     <ClInclude Include="type_traits" />
     <ClInclude Include="utility" />
     <ClInclude Include="memory" />
+    <ClInclude Include="iterator" />
   </ItemGroup>
 </Project>

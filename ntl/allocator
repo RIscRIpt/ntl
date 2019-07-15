@@ -30,15 +30,26 @@ namespace ntl {
         ~allocator() {}
 
         T* allocate(size_type n) {
+#if !DEBUG_IN_USER_MODE
             T *result = ExAllocatePoolWithTag(pool_type_, sizeof(T) * n, tag_);
             if (!result) {
                 ExRaiseStatus(STATUS_FATAL_MEMORY_EXHAUSTION);
             }
+#else
+            T *result = calloc(n, sizeof(T));
+            if (!result) {
+                SetLastError(ERROR_OUTOFMEMORY);
+            }
+#endif
             return result;
         }
 
         void deallocate(T *p, size_type n) {
+#if !DEBUG_IN_USER_MODE
             ExFreePoolWithTag(object, tag_);
+#else
+            free(p);
+#endif
         }
 
     private:

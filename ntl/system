@@ -1,11 +1,20 @@
 #pragma once
 
+#if !DEBUG_IN_USER_MODE
 extern "C" {
 #pragma warning(push)
 #pragma warning(disable : 5026 5027)
 #include <ntddk.h>
 #pragma warning(pop)
 }
+#else
+#pragma warning(push)
+#pragma warning(disable : 4668 5039)
+#include <Windows.h>
+#pragma warning(pop)
+
+#include <cstdlib>
+#endif
 
 namespace ntl {
 
