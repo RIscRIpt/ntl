@@ -47,23 +47,28 @@ namespace ntl {
             return p_ == rhs.p_;
         }
 
-        constexpr bool operator!=(iterator<I2> const &rhs) {
+        template<typename U>
+        constexpr bool operator!=(iterator<U> const &rhs) {
             return p_ != rhs.p_;
         }
 
-        constexpr bool operator<(iterator<I2> const &rhs) {
+        template<typename U>
+        constexpr bool operator<(iterator<U> const &rhs) {
             return p_ < rhs.p_;
         }
 
-        constexpr bool operator<=(iterator<I2> const &rhs) {
+        template<typename U>
+        constexpr bool operator<=(iterator<U> const &rhs) {
             return p_ <= rhs.p_;
         }
 
-        constexpr bool operator>(iterator<I2> const &rhs) {
+        template<typename U>
+        constexpr bool operator>(iterator<U> const &rhs) {
             return p_ > rhs.p_;
         }
 
-        constexpr bool operator>=(iterator<I2> const &rhs) {
+        template<typename U>
+        constexpr bool operator>=(iterator<U> const &rhs) {
             return p_ >= rhs.p_;
         }
 
