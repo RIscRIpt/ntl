@@ -2,6 +2,40 @@
 
 #include "system"
 
+#ifdef NTL_USER_MODE
+
+// Copy-paste from <wdm.h>
+typedef enum _POOL_TYPE {
+    NonPagedPool,
+    NonPagedPoolExecute = NonPagedPool,
+    PagedPool,
+    NonPagedPoolMustSucceed = NonPagedPool + 2,
+    DontUseThisType,
+    NonPagedPoolCacheAligned = NonPagedPool + 4,
+    PagedPoolCacheAligned,
+    NonPagedPoolCacheAlignedMustS = NonPagedPool + 6,
+    MaxPoolType,
+
+    NonPagedPoolBase = 0,
+    NonPagedPoolBaseMustSucceed = NonPagedPoolBase + 2,
+    NonPagedPoolBaseCacheAligned = NonPagedPoolBase + 4,
+    NonPagedPoolBaseCacheAlignedMustS = NonPagedPoolBase + 6,
+
+    NonPagedPoolSession = 32,
+    PagedPoolSession = NonPagedPoolSession + 1,
+    NonPagedPoolMustSucceedSession = PagedPoolSession + 1,
+    DontUseThisTypeSession = NonPagedPoolMustSucceedSession + 1,
+    NonPagedPoolCacheAlignedSession = DontUseThisTypeSession + 1,
+    PagedPoolCacheAlignedSession = NonPagedPoolCacheAlignedSession + 1,
+    NonPagedPoolCacheAlignedMustSSession = PagedPoolCacheAlignedSession + 1,
+
+    NonPagedPoolNx = 512,
+    NonPagedPoolNxCacheAligned = NonPagedPoolNx + 4,
+    NonPagedPoolSessionNx = NonPagedPoolNx + 32,
+} POOL_TYPE;
+
+#endif
+
 namespace ntl {
 
     template<typename T>
@@ -17,26 +51,26 @@ namespace ntl {
         {}
 
         constexpr allocator(allocator const &other)
-            : pool_type_(pool_type)
-            , tag_(tag)
+            : pool_type_(other.pool_type_)
+            , tag_(other.tag_)
         {}
 
         template<typename U>
         constexpr allocator(allocator<U> const &other)
-            : pool_type_(pool_type)
-            , tag_(tag)
+            : pool_type_(other.pool_type_)
+            , tag_(other.tag_)
         {}
 
         ~allocator() {}
 
         T* allocate(size_type n) {
-#if !DEBUG_IN_USER_MODE
-            T *result = ExAllocatePoolWithTag(pool_type_, sizeof(T) * n, tag_);
+#ifndef NTL_USER_MODE
+            T *result = static_cast<T*>(ExAllocatePoolWithTag(pool_type_, sizeof(T) * n, tag_));
             if (!result) {
                 ExRaiseStatus(STATUS_FATAL_MEMORY_EXHAUSTION);
             }
 #else
-            T *result = calloc(n, sizeof(T));
+            T *result = static_cast<T*>(calloc(n, sizeof(T)));
             if (!result) {
                 SetLastError(ERROR_OUTOFMEMORY);
             }
@@ -45,7 +79,7 @@ namespace ntl {
         }
 
         void deallocate(T *p, size_type n) {
-#if !DEBUG_IN_USER_MODE
+#ifndef NTL_USER_MODE
             ExFreePoolWithTag(object, tag_);
 #else
             free(p);

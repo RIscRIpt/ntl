@@ -13,5 +13,6 @@
     <ClInclude Include="utility" />
     <ClInclude Include="memory" />
     <ClInclude Include="iterator" />
+    <ClInclude Include="exception" />
   </ItemGroup>
 </Project>

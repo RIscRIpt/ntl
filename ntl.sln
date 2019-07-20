@@ -10,6 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ntl_test", "ntl_test\ntl_test.vcxproj", "{31883F18-1B08-4889-B0AB-B7DB1863F0D1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7AEB2784-2AB5-41D2-9846-689F139C813A} = {7AEB2784-2AB5-41D2-9846-689F139C813A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,14 +31,20 @@ Global
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.Debug|x86.Build.0 = Debug|Win32
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x64.ActiveCfg = DebugInUserMode|x64
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x64.Build.0 = DebugInUserMode|x64
-		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x64.Deploy.0 = DebugInUserMode|x64
-		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x86.ActiveCfg = DebugInUserMode|Win32
-		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x86.Build.0 = DebugInUserMode|Win32
-		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x86.Deploy.0 = DebugInUserMode|Win32
+		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x86.ActiveCfg = Debug|Win32
+		{7AEB2784-2AB5-41D2-9846-689F139C813A}.DebugInUserMode|x86.Build.0 = Debug|Win32
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.Release|x64.ActiveCfg = Release|x64
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.Release|x64.Build.0 = Release|x64
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.Release|x86.ActiveCfg = Release|Win32
 		{7AEB2784-2AB5-41D2-9846-689F139C813A}.Release|x86.Build.0 = Release|Win32
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.Debug|x64.ActiveCfg = Debug|x64
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.Debug|x86.ActiveCfg = Debug|Win32
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.DebugInUserMode|x64.ActiveCfg = Debug|x64
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.DebugInUserMode|x64.Build.0 = Debug|x64
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.DebugInUserMode|x86.ActiveCfg = Debug|Win32
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.DebugInUserMode|x86.Build.0 = Debug|Win32
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.Release|x64.ActiveCfg = Release|x64
+		{31883F18-1B08-4889-B0AB-B7DB1863F0D1}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

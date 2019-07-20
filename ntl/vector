@@ -6,6 +6,7 @@
 #include "allocator"
 #include "utility"
 #include "iterator"
+#include "exception"
 
 namespace ntl {
 
@@ -20,8 +21,8 @@ namespace ntl {
         using const_reference = value_type const&;
         using pointer = T*;
         using const_pointer = T const*;
-        class iterator : public ntl::random_access_iterator<value_type> {};
-        class const_iterator : public ntl::random_access_iterator<value_type const> {};
+        using iterator = ntl::random_access_iterator<value_type>;
+        using const_iterator = ntl::random_access_iterator<value_type const>;
         using reverse_iterator = ntl::reverse_iterator<iterator>;
         using const_reverse_iterator = ntl::reverse_iterator<const_iterator>;
 
@@ -42,9 +43,7 @@ namespace ntl {
         vector(size_type count, value_type const &value, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            capacity_ = count;
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(count);
             for (size_t i = 0; i != capacity_; i++) {
                 push_back(value);
             }
@@ -53,9 +52,7 @@ namespace ntl {
         explicit vector(size_type count, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            capacity_ = count;
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(count);
             for (size_t i = 0; i != capacity_; i++) {
                 push_back(value_type());
             }
@@ -65,18 +62,14 @@ namespace ntl {
         vector(II first, II last, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            capacity_ = ntl::distance(first, last);
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(ntl::distance(first, last));
             for (; first != last; ++first) {
                 push_back(*first);
             }
         }
 
         vector(vector const &other) {
-            capacity_ = other.size();
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(other.size());
             for (auto const &e : other) {
                 push_back(e);
             }
@@ -85,9 +78,7 @@ namespace ntl {
         vector(vector const &other, allocator_type const &allocator)
             : vector(allocator)
         {
-            capacity_ = other.size();
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(other.size());
             for (auto const &e : other) {
                 push_back(e);
             }
@@ -134,35 +125,39 @@ namespace ntl {
 
         void assign(size_type count, value_type const &value) {
             clear();
-            capacity_ = count;
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(count);
             for (auto p = begin_; p != end_; p++) {
-                new (p) value_type(value);
+                push_back(value);
             }
         }
 
         template<typename II>
         void assign(II first, II last) {
             clear();
-            capacity_ = ntl::distance(first, last);
-            begin_ = allocator_.allocate(capacity_);
-            end_ = begin_ + capacity_;
+            reserve(ntl::distance(first, last));
             for (auto p = begin_; p != end_; p++, ++first) {
-                new (p) value_type(*first);
+                push_back(*first);
             }
         }
 
         reference at(size_type position) {
             if (position >= size()) {
+#ifndef NTL_USER_MODE
                 ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
+#else
+                throw out_of_range(0, size(), position);
+#endif
             }
             return begin_[position];
         }
 
         const_reference at(size_type position) const {
             if (position >= size()) {
+#ifndef NTL_USER_MODE
                 ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
+#else
+                throw out_of_range(0, size(), position);
+#endif
             }
             return begin_[position];
         }
@@ -252,7 +247,7 @@ namespace ntl {
         }
 
         size_type size() const {
-            return ntl::distance(begin(), end());
+            return end_ - begin_;
         }
 
         void reserve(size_type new_capacity) {
@@ -262,7 +257,7 @@ namespace ntl {
             vector new_vector(allocator_);
             new_vector.capacity_ = new_capacity;
             new_vector.begin_ = allocator_.allocate(new_capacity);
-            new_vector.end_ = new_vector.begin_ + new_capacity;
+            new_vector.end_ = new_vector.begin_;
             for (auto &&e : *this) {
                 new_vector.push_back(ntl::move(e));
             }
@@ -322,6 +317,17 @@ namespace ntl {
 
         iterator erase(const_iterator first, const_iterator last) {
             // TODO
+        }
+
+        void push_back(value_type const& value) {
+            if (size() >= capacity()) {
+                size_type new_size = capacity() * 2;
+                if (!new_size) {
+                    new_size++;
+                }
+                reserve(new_size);
+            }
+            new (end_++) value_type(value);
         }
 
         void push_back(value_type &&value) {

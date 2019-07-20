@@ -142,7 +142,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4514;4748;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>DEBUG_IN_USER_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NTL_USER_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,7 +170,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4514;4748;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>DEBUG_IN_USER_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NTL_USER_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -221,6 +221,7 @@
     <ClInclude Include="iterator" />
     <ClInclude Include="memory" />
     <ClInclude Include="ntl" />
+    <ClInclude Include="exception" />
     <ClInclude Include="system" />
     <ClInclude Include="type_traits" />
     <ClInclude Include="utility" />

@@ -1,7 +1,7 @@
 #include "ntl"
 #include "system"
 
-#if !DEBUG_IN_USER_MODE
+#ifndef NTL_USER_MODE
 
 void* __cdecl operator new(size_t count) {
     void *result = ExAllocatePoolWithTag(NonPagedPoolNx, count, NTL_TAG);

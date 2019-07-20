@@ -18,11 +18,11 @@ namespace ntl {
 
     template<typename T>
     struct iterator_traits {
-        using difference_type = T::difference_type;
-        using value_type = T::value_type;
-        using pointer = T::pointer;
-        using reference = T::reference;
-        using iterator_category = T::iterator_category;
+        using difference_type = typename T::difference_type;
+        using value_type = typename T::value_type;
+        using pointer = typename T::pointer;
+        using reference = typename T::reference;
+        using iterator_category = typename T::iterator_category;
     };
 
 #pragma endregion
@@ -38,7 +38,7 @@ namespace ntl {
     class iterator {
     public:
         using value_type = T;
-        using distance_type = Distance;
+        using difference_type = Distance;
         using pointer = Pointer;
         using reference = Reference;
         using iterator_category = Category;
@@ -47,28 +47,23 @@ namespace ntl {
             return p_ == rhs.p_;
         }
 
-        template<typename U>
-        constexpr bool operator!=(iterator<U> const &rhs) {
+        constexpr bool operator!=(iterator const &rhs) {
             return p_ != rhs.p_;
         }
 
-        template<typename U>
-        constexpr bool operator<(iterator<U> const &rhs) {
+        constexpr bool operator<(iterator const &rhs) {
             return p_ < rhs.p_;
         }
 
-        template<typename U>
-        constexpr bool operator<=(iterator<U> const &rhs) {
+        constexpr bool operator<=(iterator const &rhs) {
             return p_ <= rhs.p_;
         }
 
-        template<typename U>
-        constexpr bool operator>(iterator<U> const &rhs) {
+        constexpr bool operator>(iterator const &rhs) {
             return p_ > rhs.p_;
         }
 
-        template<typename U>
-        constexpr bool operator>=(iterator<U> const &rhs) {
+        constexpr bool operator>=(iterator const &rhs) {
             return p_ >= rhs.p_;
         }
 
@@ -96,7 +91,7 @@ namespace ntl {
     {
     public:
         constexpr random_access_iterator() {}
-        constexpr random_access_iterator(pointer x) {
+        constexpr random_access_iterator(Pointer x) {
             p_ = x;
         }
 
@@ -108,15 +103,15 @@ namespace ntl {
             p_ = other.p_;
         }
 
-        constexpr reference operator*() const {
+        constexpr T& operator*() const {
             return *p_;
         }
 
-        constexpr pointer operator->() const {
+        constexpr Pointer operator->() const {
             return p_;
         }
 
-        constexpr value_type& operator[](difference_type n) const {
+        constexpr T& operator[](Distance n) const {
             return p_[n];
         }
 
@@ -143,20 +138,20 @@ namespace ntl {
             return t;
         }
 
-        constexpr random_access_iterator operator+(difference_type n) const {
+        constexpr random_access_iterator operator+(Distance n) const {
             return p_ + n;
         }
 
-        constexpr random_access_iterator operator-(difference_type n) const {
+        constexpr random_access_iterator operator-(Distance n) const {
             return p_ - n;
         }
 
-        constexpr random_access_iterator& operator+=(difference_type n) {
+        constexpr random_access_iterator& operator+=(Distance n) {
             p_ += n;
             return *this;
         }
 
-        constexpr random_access_iterator& operator-=(difference_type n) {
+        constexpr random_access_iterator& operator-=(Distance n) {
             p_ -= n;
             return *this;
         }
@@ -169,11 +164,11 @@ namespace ntl {
     class reverse_iterator {
     public:
         using iterator_type = I;
-        using iterator_category = ntl::iterator_traits<iterator_type>::iterator_category;
-        using value_type = ntl::iterator_traits<iterator_type>::value_type;
-        using difference_type = ntl::iterator_traits<iterator_type>::difference_type;
-        using pointer = ntl::iterator_traits<iterator_type>::pointer;
-        using reference = ntl::iterator_traits<iterator_type>::reference;
+        using iterator_category = typename ntl::iterator_traits<iterator_type>::iterator_category;
+        using value_type = typename ntl::iterator_traits<iterator_type>::value_type;
+        using difference_type = typename ntl::iterator_traits<iterator_type>::difference_type;
+        using pointer = typename ntl::iterator_traits<iterator_type>::pointer;
+        using reference = typename ntl::iterator_traits<iterator_type>::reference;
 
         constexpr reverse_iterator() {}
         constexpr explicit reverse_iterator(iterator_type x) {

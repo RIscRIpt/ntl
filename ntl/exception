@@ -1,0 +1,29 @@
+#pragma once
+#ifdef NTL_USER_MODE
+
+#include "system"
+
+namespace ntl {
+
+    class exception {
+    };
+
+    class logic_error : public exception {
+    };
+
+    class out_of_range : public logic_error {
+    public:
+        out_of_range(ssize_t lower_bound, ssize_t upper_bound, ssize_t value)
+            : lower_bound(lower_bound)
+            , upper_bound(upper_bound)
+            , value(value)
+        {}
+
+        ssize_t const lower_bound;
+        ssize_t const upper_bound;
+        ssize_t const value;
+    };
+
+}
+
+#endif

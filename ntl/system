@@ -1,6 +1,6 @@
 #pragma once
 
-#if !DEBUG_IN_USER_MODE
+#ifndef NTL_USER_MODE
 extern "C" {
 #pragma warning(push)
 #pragma warning(disable : 5026 5027)
@@ -19,6 +19,7 @@ extern "C" {
 namespace ntl {
 
     using size_t = SIZE_T;
+    using ssize_t = SSIZE_T;
     using ptrdiff_t = SSIZE_T;
 
 }
