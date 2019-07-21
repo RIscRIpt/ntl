@@ -30,5 +30,12 @@ namespace ntltest {
                 Assert::AreEqual(e, value);
             }
         }
+        TEST_METHOD(range_constructor) {
+            int a[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+            ntl::vector<int> w(a, a + 8);
+            for (int i = 0; i != 8; i++) {
+                Assert::AreEqual(w[i], i);
+            }
+        }
 	};
 }
