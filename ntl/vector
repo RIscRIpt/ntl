@@ -116,17 +116,19 @@ namespace ntl {
             for (auto const &e : other) {
                 push_back(e);
             }
+            return *this;
         }
 
         vector& operator=(vector &&other) {
             clear();
             swap(other);
+            return *this;
         }
 
         void assign(size_type count, value_type const &value) {
             clear();
             reserve(count);
-            for (auto p = begin_; p != end_; p++) {
+            while (count--) {
                 push_back(value);
             }
         }
@@ -135,7 +137,7 @@ namespace ntl {
         void assign(II first, II last) {
             clear();
             reserve(ntl::distance(first, last));
-            for (auto p = begin_; p != end_; p++, ++first) {
+            for (; first != last; ++first) {
                 push_back(*first);
             }
         }
@@ -275,7 +277,7 @@ namespace ntl {
             vector new_vector(allocator_);
             new_vector.reserve(size());
             for (auto &&e : *this) {
-                new_vector.emplace_back(ntl::move(e));
+                new_vector.push_back(ntl::move(e));
             }
             swap(new_vector);
         }
@@ -355,8 +357,9 @@ namespace ntl {
         }
 
         void pop_back() {
-            if (!empty())
-                end_--;
+            if (!empty()) {
+                (end_--)->~value_type();
+            }
         }
 
         void resize(size_type count) {
@@ -365,14 +368,16 @@ namespace ntl {
 
         void resize(size_type count, value_type const &value) {
             if (count <= size()) {
-                end_ = begin_ + count;
+                while (size() > count) {
+                    pop_back();
+                }
             } else {
                 vector new_vector(allocator_);
                 new_vector.reserve(count);
                 for (auto &&e : *this) {
                     new_vector.push_back(ntl::move(e));
                 }
-                for (size_type i = size(); i != count; i++) {
+                while (new_vector.size() < count) {
                     new_vector.push_back(value);
                 }
                 swap(new_vector);
