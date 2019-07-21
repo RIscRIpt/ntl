@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system"
+#include "type_traits"
 
 namespace ntl {
 
@@ -25,6 +26,15 @@ namespace ntl {
         using iterator_category = typename T::iterator_category;
     };
 
+    template<typename T>
+    struct iterator_traits<T*> {
+        using difference_type = ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+        using iterator_category = random_access_iterator_tag;
+    };
+
 #pragma endregion
 #pragma region iterator
 
@@ -42,6 +52,10 @@ namespace ntl {
         using pointer = Pointer;
         using reference = Reference;
         using iterator_category = Category;
+
+        iterator(pointer p)
+            : p_(p)
+        {}
 
         constexpr bool operator==(iterator const &rhs) {
             return p_ == rhs.p_;
@@ -91,12 +105,12 @@ namespace ntl {
     {
     public:
         constexpr random_access_iterator() {}
-        constexpr random_access_iterator(Pointer x) {
-            p_ = x;
-        }
+        constexpr random_access_iterator(Pointer x)
+            : iterator(x)
+        {}
 
         constexpr random_access_iterator(random_access_iterator const &other)
-            : p_(other.p_)
+            : iterator<random_access_iterator_tag, T, Distance, Pointer, Reference>(other.p_)
         {}
 
         constexpr random_access_iterator& operator=(random_access_iterator const &other) {
@@ -273,6 +287,21 @@ namespace ntl {
     template<typename I1, typename I2>
     constexpr bool operator>=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
         return lhs.base() >= rhs.base();
+    }
+
+#pragma endregion
+#pragma region operations
+
+    template<typename II>
+    constexpr typename iterator_traits<II>::difference_type distance(II first, II last) {
+        if constexpr (is_same_v<random_access_iterator_tag, typename iterator_traits<II>::iterator_category>) {
+            return last - first;
+        } else {
+            static_assert(
+                is_same_v<random_access_iterator_tag, typename iterator_traits<II>::iterator_category>,
+                "TODO: support more types in ntl::distance"
+            );
+        }
     }
 
 #pragma endregion
