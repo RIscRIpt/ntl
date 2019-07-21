@@ -48,7 +48,7 @@ namespace ntl {
     template<bool B, typename T = void>
     struct enable_if {};
 
-    template<class T>
+    template<typename T>
     struct enable_if<true, T> { using type = T; };
 
     template<bool B, typename T = void>
