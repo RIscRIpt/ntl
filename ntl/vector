@@ -62,7 +62,7 @@ namespace ntl {
         vector(II first, II last, allocator_type const &allocator = allocator_type())
             : vector(allocator)
         {
-            reserve(ntl::distance(first, last));
+            reserve(distance(first, last));
             for (; first != last; ++first) {
                 push_back(*first);
             }
