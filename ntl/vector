@@ -10,20 +10,20 @@
 
 namespace ntl {
 
-    template<typename T, typename Allocator = ntl::allocator<T>>
+    template<typename T, typename Allocator = allocator<T>>
     class vector final {
     public:
         using value_type = T;
         using allocator_type = Allocator;
-        using size_type = ntl::size_t;
-        using difference_type = ntl::ptrdiff_t;
+        using size_type = size_t;
+        using difference_type = ptrdiff_t;
         using reference = value_type&;
         using const_reference = value_type const&;
         using pointer = T*;
         using const_pointer = T const*;
-        using iterator = ntl::random_access_iterator<value_type>;
-        using const_iterator = ntl::random_access_iterator<value_type const>;
-        using reverse_iterator = ntl::reverse_iterator<iterator>;
+        using iterator = random_access_iterator<value_type>;
+        using const_iterator = random_access_iterator<value_type const>;
+        using reverse_iterator = reverse_iterator<iterator>;
         using const_reverse_iterator = ntl::reverse_iterator<const_iterator>;
 
         vector()
@@ -292,25 +292,58 @@ namespace ntl {
         }
 
         iterator insert(const_iterator position, value_type const &value) {
-            // TODO
+            insert(position, static_cast<size_type>(1), value);
         }
 
         iterator insert(const_iterator position, value_type &&value) {
-            // TODO
+            size_type offset = position - begin_;
+            reserve(capacity() + 1);
+            for (auto p = end_; p > begin_ + offset; --p) {
+                *p = move(*(p - 1));
+            }
+            ++end_;
+            *(begin_ + offset) = move(value);
+            return begin_ + offset;
         }
 
         iterator insert(const_iterator position, size_type count, value_type const &value) {
-            // TODO
+            size_type offset = position - begin_;
+            reserve(capacity() + count);
+            for (auto p = end_ - 1; p >= begin_ + offset; --p) {
+                *(p + count) = move(*p);
+            }
+            end_ += count;
+            for (auto p = begin_ + offset; count--; ++p) {
+                *p = value;
+            }
+            return begin_ + offset;
         }
 
         template<typename II>
         iterator insert(const_iterator position, II first, II last) {
-            // TODO
+            size_type count = distance(first, last);
+            size_type offset = position - begin_;
+            reserve(capacity() + count);
+            for (auto p = end_ - 1; p >= begin_ + offset; --p) {
+                *(p + count) = move(*p);
+            }
+            end_ += count;
+            for (auto p = begin_ + offset; count--; ++p, ++first) {
+                *p = *first;
+            }
+            return begin_ + offset;
         }
 
         template<typename ...Args>
         iterator emplace(const_iterator position, Args &&...args) {
-            // TODO
+            size_type offset = position - begin_;
+            reserve(capacity() + 1);
+            for (auto p = end_; p > begin_ + offset; --p) {
+                *p = move(*(p - 1));
+            }
+            ++end_;
+            *(begin_ + offset) = move(value_type(forward<value_type>(args)...));
+            return begin_ + offset;
         }
 
         iterator erase(const_iterator position) {
@@ -321,7 +354,7 @@ namespace ntl {
             // TODO
         }
 
-        void push_back(value_type const& value) {
+        void push_back(value_type const &value) {
             if (size() >= capacity()) {
                 size_type new_size = capacity() * 2;
                 if (!new_size) {
@@ -340,7 +373,7 @@ namespace ntl {
                 }
                 reserve(new_size);
             }
-            new (end_++) value_type(ntl::move(value));
+            new (end_++) value_type(move(value));
         }
 
         template<typename ...Args>
@@ -352,7 +385,7 @@ namespace ntl {
                 }
                 reserve(new_size);
             }
-            new (end_) value_type(ntl::forward<value_type>(args));
+            new (end_) value_type(forward<value_type>(args)...);
             return *(end_++);
         }
 
@@ -375,7 +408,7 @@ namespace ntl {
                 vector new_vector(allocator_);
                 new_vector.reserve(count);
                 for (auto &&e : *this) {
-                    new_vector.push_back(ntl::move(e));
+                    new_vector.push_back(move(e));
                 }
                 while (new_vector.size() < count) {
                     new_vector.push_back(value);

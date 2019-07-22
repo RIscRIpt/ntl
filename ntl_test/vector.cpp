@@ -177,5 +177,106 @@ namespace ntltest {
                 Assert::AreEqual(a[i], w[i]);
             }
         }
+        TEST_METHOD(insert) {
+            int a[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+            ntl::vector<int> v(a, a + 8);
+            for (size_t i = 0; i != 8; i++) {
+                Assert::AreEqual(a[i], v[i]);
+            }
+            v.insert(v.begin() + 4, 8);
+            for (size_t i = 0; i != 9; i++) {
+                if (i < 4) {
+                    Assert::AreEqual(a[i], v[i]);
+                } else if (i == 4) {
+                    Assert::AreEqual(8, v[i]);
+                } else /*if (i > 4)*/ {
+                    Assert::AreEqual(a[i - 1], v[i]);
+                }
+            }
+        }
+        TEST_METHOD(insert_move) {
+            size_t count = 16;
+            size_t value = 3;
+            ntl::vector<ntl::vector<size_t>> v;
+            ntl::vector<size_t> w(count, value);
+            v.resize(2);
+            for (size_t i = 0; i != v.size(); i++) {
+                v[i].assign(count, i + 1);
+            }
+            for (size_t i = 0; i != v.size(); i++) {
+                for (size_t j = 0; j != count; j++) {
+                    Assert::AreEqual(i + 1, v[i][j]);
+                }
+            }
+            for (size_t i = 0; i != w.size(); i++) {
+                Assert::AreEqual(value, w[i]);
+            }
+            v.insert(v.begin() + 1, ntl::move(w));
+            Assert::AreEqual((size_t)3, v.size());
+            for (size_t i = 0; i != count; i++) {
+                Assert::AreEqual((size_t)1, v[0][i]);
+                Assert::AreEqual((size_t)3, v[1][i]);
+                Assert::AreEqual((size_t)2, v[2][i]);
+            }
+            Assert::IsTrue(w.empty());
+        }
+        TEST_METHOD(insert_count) {
+            int a[] = { 0, 1, 2, 3, 12, 13, 14, 15 };
+            ntl::vector<int> v(a, a + 8);
+            for (size_t i = 0; i != 8; i++) {
+                Assert::AreEqual(a[i], v[i]);
+            }
+            v.insert(v.begin() + 4, (size_t)8, 8);
+            Assert::AreEqual((size_t)16, v.size());
+            for (size_t i = 0; i != v.size(); i++) {
+                if (i < 4) {
+                    Assert::AreEqual(a[i], v[i]);
+                } else if (i < 12) {
+                    Assert::AreEqual(8, v[i]);
+                } else /*if (i < 16)*/ {
+                    Assert::AreEqual(a[i - 8], v[i]);
+                }
+            }
+        }
+        TEST_METHOD(insert_range) {
+            int a[] = { 0, 1, 2, 3, 3, 2, 1, 0 };
+            ntl::vector<int> v(a, a + 8);
+            v.insert(v.begin() + 4, a, a + 4);
+            v.insert(v.begin() + 8, a + 4, a + 8);
+            Assert::AreEqual((size_t)16, v.size());
+            for (size_t i = 0; i != 8; i++) {
+                if (i < 4) {
+                    Assert::AreEqual(a[i], v[i]);
+                } else /*if (i < 8)*/ {
+                    Assert::AreEqual(a[i - 4], v[i]);
+                }
+            }
+            for (size_t i = 8; i != 16; i++) {
+                if (i < 12) {
+                    Assert::AreEqual(a[i - 4], v[i]);
+                } else /*if (i < 8)*/ {
+                    Assert::AreEqual(a[i - 8], v[i]);
+                }
+            }
+        }
+        TEST_METHOD(emplace) {
+            size_t count = 16;
+            ntl::vector<ntl::vector<size_t>> v;
+            v.resize(2);
+            v[0].assign(count, (size_t)1);
+            v[1].assign(count, (size_t)3);
+            for (size_t i = 0; i != v.size(); i++) {
+                for (size_t j = 0; j != count; j++) {
+                    Assert::AreEqual(i + 1, v[i][j]);
+                }
+            }
+            v.emplace(v.begin() + 1, count, (size_t)2);
+            Assert::AreEqual((size_t)3, v.size());
+            for (size_t i = 0; i != v.size(); i++) {
+                for (size_t j = 0; j != count; j++) {
+                    Assert::AreEqual(i + 1, v[i][j]);
+                }
+            }
+        }
 	};
 }
