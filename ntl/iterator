@@ -73,6 +73,10 @@ namespace ntl {
             : p_(p)
         {}
 
+        constexpr operator pointer() const {
+            return p_;
+        }
+
         constexpr bool operator==(iterator const &rhs) {
             return p_ == rhs.p_;
         }
@@ -133,6 +137,10 @@ namespace ntl {
             p_ = other.p_;
         }
 
+        constexpr operator random_access_iterator<T const, Distance, T const*, T const&>() const {
+            return p_;
+        }
+
         constexpr T& operator*() const {
             return *p_;
         }
@@ -144,7 +152,6 @@ namespace ntl {
         constexpr T& operator[](Distance n) const {
             return p_[n];
         }
-
 
         constexpr random_access_iterator& operator++() {
             ++p_;
