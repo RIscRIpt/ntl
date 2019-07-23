@@ -143,24 +143,12 @@ namespace ntl {
         }
 
         reference at(size_type position) {
-            if (position >= size()) {
-#ifndef NTL_USER_MODE
-                ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
-#else
-                throw out_of_range(0, size(), position);
-#endif
-            }
+            validate_offset(position);
             return begin_[position];
         }
 
         const_reference at(size_type position) const {
-            if (position >= size()) {
-#ifndef NTL_USER_MODE
-                ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
-#else
-                throw out_of_range(0, size(), position);
-#endif
-            }
+            validate_offset(position);
             return begin_[position];
         }
 
@@ -347,11 +335,31 @@ namespace ntl {
         }
 
         iterator erase(const_iterator position) {
-            // TODO
+            size_type offset = position - begin_;
+            validate_offset(offset);
+            for (auto p = begin_ + offset + 1; p != end_; ++p) {
+                *(p - 1) = move(*p);
+            }
+            --end_;
+            return begin_ + offset;
         }
 
         iterator erase(const_iterator first, const_iterator last) {
-            // TODO
+            size_type offset_first = first - begin_;
+            size_type offset_last = last - begin_;
+            if (offset_first >= offset_last) {
+                return begin_ + offset_last;
+            }
+            validate_offset(offset_first);
+            validate_offset(offset_last - 1);
+            for (auto p = begin_ + offset_last, q = begin_ + offset_first; p != end_; ++p, ++q) {
+                *q = move(*p);
+            }
+            for (auto p = end_ - 1; p != end_ - (offset_last - offset_first); --p) {
+                p->~value_type();
+            }
+            end_ -= offset_last - offset_first;
+            return begin_ + offset_last;
         }
 
         void push_back(value_type const &value) {
@@ -425,6 +433,16 @@ namespace ntl {
         }
 
     private:
+        void validate_offset(size_type offset) {
+            if (offset >= size()) {
+#ifndef NTL_USER_MODE
+                ExRaiseStatus(STATUS_ARRAY_BOUNDS_EXCEEDED);
+#else
+                throw out_of_range(0, size(), offset);
+#endif
+            }
+        }
+
         pointer begin_, end_;
         size_type capacity_;
         allocator_type allocator_;

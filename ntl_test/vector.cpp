@@ -277,5 +277,42 @@ namespace ntltest {
                 }
             }
         }
+        TEST_METHOD(erase) {
+            int a[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+            ntl::vector<int> v(a, a + 8);
+            for (size_t i = 0; i != 8; i++) {
+                Assert::AreEqual(a[i], v[i]);
+            }
+            v.erase(v.begin() + 4);
+            Assert::AreEqual((size_t)7, v.size());
+            for (size_t i = 0; i != v.size(); i++) {
+                if (i < 4) {
+                    Assert::AreEqual(a[i], v[i]);
+                } else /*if (i >= 4)*/ {
+                    Assert::AreEqual(a[i + 1], v[i]);
+                }
+            }
+        }
+        TEST_METHOD(erase_range) {
+            int a[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+            ntl::vector<int> v(a, a + 8);
+            for (size_t i = 0; i != 8; i++) {
+                Assert::AreEqual(a[i], v[i]);
+            }
+            v.erase(v.begin() + 3, v.begin() + 5);
+            Assert::AreEqual((size_t)6, v.size());
+            for (size_t i = 0; i != v.size(); i++) {
+                if (i < 3) {
+                    Assert::AreEqual(a[i], v[i]);
+                } else /*if (i >= 4)*/ {
+                    Assert::AreEqual(a[i + 2], v[i]);
+                }
+            }
+            v.erase(v.begin() + 3, v.end());
+            Assert::AreEqual((size_t)3, v.size());
+            for (size_t i = 0; i != v.size(); i++) {
+                Assert::AreEqual(a[i], v[i]);
+            }
+        }
 	};
 }
