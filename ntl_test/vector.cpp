@@ -265,10 +265,9 @@ namespace ntltest {
             v.resize(2);
             v[0].assign(count, (size_t)1);
             v[1].assign(count, (size_t)3);
-            for (size_t i = 0; i != v.size(); i++) {
-                for (size_t j = 0; j != count; j++) {
-                    Assert::AreEqual(i + 1, v[i][j]);
-                }
+            for (size_t i = 0; i != count; i++) {
+                Assert::AreEqual((size_t)1, v[0][i]);
+                Assert::AreEqual((size_t)3, v[1][i]);
             }
             v.emplace(v.begin() + 1, count, (size_t)2);
             Assert::AreEqual((size_t)3, v.size());

@@ -342,7 +342,7 @@ namespace ntl {
                 *p = move(*(p - 1));
             }
             ++end_;
-            *(begin_ + offset) = move(value_type(forward<value_type>(args)...));
+            *(begin_ + offset) = move(value_type(forward<Args>(args)...));
             return begin_ + offset;
         }
 
