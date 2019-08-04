@@ -84,7 +84,7 @@ namespace ntl {
 
         void deallocate(T *p, size_type n) {
 #ifndef NTL_USER_MODE
-            ExFreePoolWithTag(object, tag_);
+            ExFreePoolWithTag(p, tag_);
 #else
             free(p);
 #endif

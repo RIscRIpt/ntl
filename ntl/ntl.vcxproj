@@ -213,9 +213,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ntl.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="algorithm" />
     <ClInclude Include="allocator" />
     <ClInclude Include="iterator" />

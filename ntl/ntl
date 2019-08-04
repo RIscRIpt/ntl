@@ -1,3 +1,9 @@
 #pragma once
 
 #define NTL_TAG 'LTN '
+
+void* __cdecl operator new(size_t);
+void* __cdecl operator new(size_t, void*);
+void __cdecl operator delete(void*);
+void __cdecl operator delete(void*, void*);
+void __cdecl operator delete(void*, size_t);
