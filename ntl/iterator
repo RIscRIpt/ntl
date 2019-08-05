@@ -124,7 +124,10 @@ namespace ntl {
         >
     {
     public:
-        constexpr random_access_iterator() {}
+        constexpr random_access_iterator()
+            : iterator(nullptr)
+        {}
+
         constexpr random_access_iterator(Pointer x)
             : iterator(x)
         {}
@@ -135,6 +138,7 @@ namespace ntl {
 
         constexpr random_access_iterator& operator=(random_access_iterator const &other) {
             p_ = other.p_;
+            return *this;
         }
 
         constexpr operator random_access_iterator<T const, Distance, T const*, T const&>() const {
@@ -208,7 +212,7 @@ namespace ntl {
         using reference = typename ntl::iterator_traits<iterator_type>::reference;
 
         constexpr reverse_iterator() {}
-        constexpr explicit reverse_iterator(iterator_type x) {
+        constexpr reverse_iterator(iterator_type x) {
             base_ = x;
         }
 
@@ -225,7 +229,7 @@ namespace ntl {
         }
 
         constexpr reference operator*() const {
-            return *(base - 1);
+            return *(base_ - 1);
         }
 
         constexpr pointer operator->() const {

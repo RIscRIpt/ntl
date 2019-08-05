@@ -271,9 +271,12 @@ namespace ntl {
         }
 
         void clear() {
-            for (auto &e : *this)
-                e.~value_type();
-            allocator_.deallocate(begin_, capacity_);
+            for (auto i = rbegin(); i != rend(); ++i) {
+                (*i).~value_type();
+            }
+            if (begin_) {
+                allocator_.deallocate(begin_, capacity_);
+            }
             begin_ = nullptr;
             end_ = nullptr;
             capacity_ = 0;
