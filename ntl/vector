@@ -209,27 +209,27 @@ namespace ntl {
         }
 
         reverse_iterator rbegin() {
-            return end_ - 1;
+            return end_;
         }
 
         const_reverse_iterator rbegin() const {
-            return end_ - 1;
+            return end_;
         }
 
         const_reverse_iterator crbegin() const {
-            return end_ - 1;
+            return end_;
         }
 
         reverse_iterator rend() {
-            return begin_ - 1;
+            return begin_;
         }
 
         const_reverse_iterator rend() const {
-            return begin_ - 1;
+            return begin_;
         }
 
         const_reverse_iterator crend() const {
-            return begin_ - 1;
+            return begin_;
         }
 
         bool empty() const {
