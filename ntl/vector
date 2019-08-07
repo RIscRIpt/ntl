@@ -402,7 +402,7 @@ namespace ntl {
 
         void pop_back() {
             if (!empty()) {
-                (end_--)->~value_type();
+                (--end_)->~value_type();
             }
         }
 
