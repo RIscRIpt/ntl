@@ -396,7 +396,7 @@ namespace ntl {
                 }
                 reserve(new_size);
             }
-            new (end_) value_type(forward<value_type>(args)...);
+            new (end_) value_type(forward<Args>(args)...);
             return *(end_++);
         }
 
