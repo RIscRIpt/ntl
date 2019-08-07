@@ -5,7 +5,7 @@ namespace ntl {
 #pragma region equal
 
     template<typename II1, typename II2>
-    constexpr bool equal(II1 first1, II1 last1, II2 first2) {
+    constexpr bool equal(II1 first1, II1 last1, II2 first2) noexcept {
         for (auto i = first1, j = first2; i != last1; ++i, ++j) {
             if (*i != *j) {
                 return false;
@@ -15,7 +15,7 @@ namespace ntl {
     }
 
     template<typename II1, typename II2, typename BinaryPredicate>
-    constexpr bool equal(II1 first1, II1 last1, II2 first2, BinaryPredicate p) {
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, BinaryPredicate p) noexcept {
         for (auto i = first1, j = first2; i != last1; ++i, ++j) {
             if (!p(*i, *j)) {
                 return false;
@@ -25,7 +25,7 @@ namespace ntl {
     }
 
     template<typename II1, typename II2>
-    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2) {
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2) noexcept {
         for (auto i = first1, j = first2; i != last1 && j != last2; ++i, ++j) {
             if (*i != *j) {
                 return false;
@@ -35,7 +35,7 @@ namespace ntl {
     }
 
     template<typename II1, typename II2, typename BinaryPredicate>
-    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2, BinaryPredicate p) {
+    constexpr bool equal(II1 first1, II1 last1, II2 first2, II2 last2, BinaryPredicate p) noexcept {
         for (auto i = first1, j = first2; i != last1 && j != last2; ++i, ++j) {
             if (p(*i, *j)) {
                 return false;
@@ -48,7 +48,7 @@ namespace ntl {
 #pragma region lexicographical_compare
 
     template<typename II1, typename II2>
-    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2) {
+    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2) noexcept {
         for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
             if (*first1 < *first2)
                 return true;
@@ -59,7 +59,7 @@ namespace ntl {
     }
 
     template<typename II1, typename II2, typename Compare>
-    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2, Compare compare) {
+    constexpr bool lexicographical_compare(II1 first1, II1 last1, II2 first2, II2 last2, Compare compare) noexcept {
         for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
             if (compare(*first1, *first2))
                 return true;

@@ -45,26 +45,26 @@ namespace ntl {
         using size_type = ntl::size_t;
         using difference_type = ntl::ptrdiff_t;
 
-        constexpr explicit allocator(POOL_TYPE pool_type = NonPagedPoolNx, ULONG tag = NTL_TAG, bool zero_initialize = true)
+        constexpr explicit allocator(POOL_TYPE pool_type = NonPagedPoolNx, ULONG tag = NTL_TAG, bool zero_initialize = true) noexcept
             : pool_type_(pool_type)
             , tag_(tag)
             , zero_initialize_(zero_initialize)
         {}
 
-        constexpr allocator(allocator const &other)
+        constexpr allocator(allocator const &other) noexcept
             : pool_type_(other.pool_type_)
             , tag_(other.tag_)
         {}
 
         template<typename U>
-        constexpr allocator(allocator<U> const &other)
+        constexpr allocator(allocator<U> const &other) noexcept
             : pool_type_(other.pool_type_)
             , tag_(other.tag_)
         {}
 
-        ~allocator() {}
+        ~allocator() noexcept {}
 
-        T* allocate(size_type n) {
+        T* allocate(size_type n) noexcept {
 #ifndef NTL_USER_MODE
             T *result = static_cast<T*>(ExAllocatePoolWithTag(pool_type_, sizeof(T) * n, tag_));
             if (!result) {
@@ -82,7 +82,7 @@ namespace ntl {
             return result;
         }
 
-        void deallocate(T *p, size_type n) {
+        void deallocate(T *p, size_type n) noexcept {
 #ifndef NTL_USER_MODE
             ExFreePoolWithTag(p, tag_);
 #else
@@ -97,24 +97,24 @@ namespace ntl {
     };
 
     template<typename T1, typename T2>
-    bool operator==(allocator<T1> const &lhs, allocator<T2> const &rhs) {
+    bool operator==(allocator<T1> const &lhs, allocator<T2> const &rhs) noexcept {
         return false;
     }
 
     template<typename T>
-    bool operator==(allocator<T> const &lhs, allocator<T> const &rhs) {
+    bool operator==(allocator<T> const &lhs, allocator<T> const &rhs) noexcept {
         return lhs.pool_type_ == rhs.pool_type_
             && lhs.tag_ == rhs.tag_
             && lhs.zero_initialize_ == rhs.zero_initialize_;
     }
 
     template<typename T1, typename T2>
-    bool operator!=(allocator<T1> const &lhs, allocator<T2> const &rhs) {
+    bool operator!=(allocator<T1> const &lhs, allocator<T2> const &rhs) noexcept {
         return true;
     }
 
     template<typename T>
-    bool operator!=(allocator<T> const &lhs, allocator<T> const &rhs) {
+    bool operator!=(allocator<T> const &lhs, allocator<T> const &rhs) noexcept {
         return lhs.pool_type_ != rhs.pool_type_
             || lhs.tag_ != rhs.tag_
             || lhs.zero_initialize_ != rhs.zero_initialize_;

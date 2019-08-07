@@ -3,11 +3,12 @@
 namespace ntl {
 
     template<typename T>
-    constexpr T* addressof(T& arg) {
-        // TODO
+    constexpr T* addressof(T& arg) noexcept {
+        static_assert(false && "not implemented");
+        return nullptr;
     }
 
     template<typename T>
-    const T* addressof(const T&&) = delete;
+    const T* addressof(const T&&) noexcept = delete;
 
 }

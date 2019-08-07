@@ -23,24 +23,24 @@ namespace ntl {
         using const_pointer = T const*;
         using iterator = random_access_iterator<value_type>;
         using const_iterator = random_access_iterator<value_type const>;
-        using reverse_iterator = reverse_iterator<iterator>;
+        using reverse_iterator = ntl::reverse_iterator<iterator>;
         using const_reverse_iterator = ntl::reverse_iterator<const_iterator>;
 
-        vector()
+        vector() noexcept
             : begin_(nullptr)
             , end_(nullptr)
             , capacity_(0)
             , allocator_()
         {}
 
-        explicit vector(allocator_type const &allocator)
+        explicit vector(allocator_type const &allocator) noexcept
             : begin_(nullptr)
             , end_(nullptr)
             , capacity_(0)
             , allocator_(allocator)
         {}
 
-        vector(size_type count, value_type const &value, allocator_type const &allocator = allocator_type())
+        vector(size_type count, value_type const &value, allocator_type const &allocator = allocator_type()) noexcept
             : vector(allocator)
         {
             reserve(count);
@@ -49,7 +49,7 @@ namespace ntl {
             }
         }
 
-        explicit vector(size_type count, allocator_type const &allocator = allocator_type())
+        explicit vector(size_type count, allocator_type const &allocator = allocator_type()) noexcept
             : vector(allocator)
         {
             reserve(count);
@@ -59,7 +59,7 @@ namespace ntl {
         }
 
         template<typename II>
-        vector(II first, II last, allocator_type const &allocator = allocator_type())
+        vector(II first, II last, allocator_type const &allocator = allocator_type()) noexcept
             : vector(allocator)
         {
             reserve(distance(first, last));
@@ -68,14 +68,14 @@ namespace ntl {
             }
         }
 
-        vector(vector const &other) {
+        vector(vector const &other) noexcept {
             reserve(other.size());
             for (auto const &e : other) {
                 push_back(e);
             }
         }
 
-        vector(vector const &other, allocator_type const &allocator)
+        vector(vector const &other, allocator_type const &allocator) noexcept
             : vector(allocator)
         {
             reserve(other.size());
@@ -84,7 +84,7 @@ namespace ntl {
             }
         }
 
-        vector(vector &&other)
+        vector(vector &&other) noexcept
             : begin_(other.begin_)
             , end_(other.end_)
             , capacity_(other.capacity_)
@@ -95,7 +95,7 @@ namespace ntl {
             other.capacity_ = 0;
         }
 
-        vector(vector &&other, allocator_type const &allocator)
+        vector(vector &&other, allocator_type const &allocator) noexcept
             : begin_(other.begin_)
             , end_(other.end_)
             , capacity_(other.capacity_)
@@ -106,11 +106,11 @@ namespace ntl {
             other.capacity_ = 0;
         }
 
-        ~vector() {
+        ~vector() noexcept {
             clear();
         }
 
-        vector& operator=(vector const &other) {
+        vector& operator=(vector const &other) noexcept {
             clear();
             reserve(other.size());
             for (auto const &e : other) {
@@ -119,13 +119,13 @@ namespace ntl {
             return *this;
         }
 
-        vector& operator=(vector &&other) {
+        vector& operator=(vector &&other) noexcept {
             clear();
             swap(other);
             return *this;
         }
 
-        void assign(size_type count, value_type const &value) {
+        void assign(size_type count, value_type const &value) noexcept {
             clear();
             reserve(count);
             while (count--) {
@@ -134,7 +134,7 @@ namespace ntl {
         }
 
         template<typename II>
-        void assign(II first, II last) {
+        void assign(II first, II last) noexcept {
             clear();
             reserve(ntl::distance(first, last));
             for (; first != last; ++first) {
@@ -142,105 +142,105 @@ namespace ntl {
             }
         }
 
-        reference at(size_type position) {
+        reference at(size_type position) noexcept {
             validate_offset(position);
             return begin_[position];
         }
 
-        const_reference at(size_type position) const {
+        const_reference at(size_type position) const noexcept {
             validate_offset(position);
             return begin_[position];
         }
 
-        reference operator[](size_type position) {
+        reference operator[](size_type position) noexcept {
             return begin_[position];
         }
 
-        const_reference operator[](size_type position) const {
+        const_reference operator[](size_type position) const noexcept {
             return begin_[position];
         }
 
-        reference front() {
+        reference front() noexcept {
             return *begin_;
         }
 
-        const_reference front() const {
+        const_reference front() const noexcept {
             return *begin_;
         }
 
-        reference back() {
+        reference back() noexcept {
             return *(end_ - 1);
         }
 
-        const_reference back() const {
+        const_reference back() const noexcept {
             return *(end_ - 1);
         }
 
-        pointer data() {
+        pointer data() noexcept {
             return begin_;
         }
 
-        const_pointer data() const {
+        const_pointer data() const noexcept {
             return begin_;
         }
 
-        iterator begin() {
+        iterator begin() noexcept {
             return begin_;
         }
 
-        const_iterator begin() const {
+        const_iterator begin() const noexcept {
             return begin_;
         }
 
-        const_iterator cbegin() const {
+        const_iterator cbegin() const noexcept {
             return begin_;
         }
 
-        iterator end() {
+        iterator end() noexcept {
             return end_;
         }
 
-        const_iterator end() const {
+        const_iterator end() const noexcept {
             return end_;
         }
 
-        const_iterator cend() const {
+        const_iterator cend() const noexcept {
             return end_;
         }
 
-        reverse_iterator rbegin() {
+        reverse_iterator rbegin() noexcept {
             return end_;
         }
 
-        const_reverse_iterator rbegin() const {
+        const_reverse_iterator rbegin() const noexcept {
             return end_;
         }
 
-        const_reverse_iterator crbegin() const {
+        const_reverse_iterator crbegin() const noexcept {
             return end_;
         }
 
-        reverse_iterator rend() {
+        reverse_iterator rend() noexcept {
             return begin_;
         }
 
-        const_reverse_iterator rend() const {
+        const_reverse_iterator rend() const noexcept {
             return begin_;
         }
 
-        const_reverse_iterator crend() const {
+        const_reverse_iterator crend() const noexcept {
             return begin_;
         }
 
-        bool empty() const {
+        bool empty() const noexcept {
             return begin() == end();
         }
 
-        size_type size() const {
+        size_type size() const noexcept {
             return end_ - begin_;
         }
 
-        void reserve(size_type new_capacity) {
+        void reserve(size_type new_capacity) noexcept {
             if (new_capacity <= capacity_) {
                 return;
             }
@@ -254,11 +254,11 @@ namespace ntl {
             swap(new_vector);
         }
 
-        size_type capacity() const {
+        size_type capacity() const noexcept {
             return capacity_;
         }
 
-        void shrink_to_fit() {
+        void shrink_to_fit() noexcept {
             if (size() == capacity_) {
                 return;
             }
@@ -270,7 +270,7 @@ namespace ntl {
             swap(new_vector);
         }
 
-        void clear() {
+        void clear() noexcept {
             for (auto i = rbegin(); i != rend(); ++i) {
                 (*i).~value_type();
             }
@@ -282,11 +282,11 @@ namespace ntl {
             capacity_ = 0;
         }
 
-        iterator insert(const_iterator position, value_type const &value) {
+        iterator insert(const_iterator position, value_type const &value) noexcept {
             insert(position, static_cast<size_type>(1), value);
         }
 
-        iterator insert(const_iterator position, value_type &&value) {
+        iterator insert(const_iterator position, value_type &&value) noexcept {
             size_type offset = position - begin_;
             reserve(capacity() + 1);
             for (auto p = end_; p > begin_ + offset; --p) {
@@ -297,7 +297,7 @@ namespace ntl {
             return begin_ + offset;
         }
 
-        iterator insert(const_iterator position, size_type count, value_type const &value) {
+        iterator insert(const_iterator position, size_type count, value_type const &value) noexcept {
             size_type offset = position - begin_;
             reserve(capacity() + count);
             for (auto p = end_ - 1; p >= begin_ + offset; --p) {
@@ -311,7 +311,7 @@ namespace ntl {
         }
 
         template<typename II>
-        iterator insert(const_iterator position, II first, II last) {
+        iterator insert(const_iterator position, II first, II last) noexcept {
             size_type count = distance(first, last);
             size_type offset = position - begin_;
             reserve(capacity() + count);
@@ -326,7 +326,7 @@ namespace ntl {
         }
 
         template<typename ...Args>
-        iterator emplace(const_iterator position, Args &&...args) {
+        iterator emplace(const_iterator position, Args &&...args) noexcept {
             size_type offset = position - begin_;
             reserve(capacity() + 1);
             for (auto p = end_; p > begin_ + offset; --p) {
@@ -337,7 +337,7 @@ namespace ntl {
             return begin_ + offset;
         }
 
-        iterator erase(const_iterator position) {
+        iterator erase(const_iterator position) noexcept {
             size_type offset = position - begin_;
             validate_offset(offset);
             for (auto p = begin_ + offset + 1; p != end_; ++p) {
@@ -347,7 +347,7 @@ namespace ntl {
             return begin_ + offset;
         }
 
-        iterator erase(const_iterator first, const_iterator last) {
+        iterator erase(const_iterator first, const_iterator last) noexcept {
             size_type offset_first = first - begin_;
             size_type offset_last = last - begin_;
             if (offset_first >= offset_last) {
@@ -365,7 +365,7 @@ namespace ntl {
             return begin_ + offset_last;
         }
 
-        void push_back(value_type const &value) {
+        void push_back(value_type const &value) noexcept {
             if (size() >= capacity()) {
                 size_type new_size = capacity() * 2;
                 if (!new_size) {
@@ -376,7 +376,7 @@ namespace ntl {
             new (end_++) value_type(value);
         }
 
-        void push_back(value_type &&value) {
+        void push_back(value_type &&value) noexcept {
             if (size() >= capacity()) {
                 size_type new_size = capacity() * 2;
                 if (!new_size) {
@@ -388,7 +388,7 @@ namespace ntl {
         }
 
         template<typename ...Args>
-        reference emplace_back(Args &&...args) {
+        reference emplace_back(Args &&...args) noexcept {
             if (size() >= capacity()) {
                 size_type new_size = capacity() * 2;
                 if (!new_size) {
@@ -400,17 +400,17 @@ namespace ntl {
             return *(end_++);
         }
 
-        void pop_back() {
+        void pop_back() noexcept {
             if (!empty()) {
                 (--end_)->~value_type();
             }
         }
 
-        void resize(size_type count) {
+        void resize(size_type count) noexcept {
             resize(count, value_type());
         }
 
-        void resize(size_type count, value_type const &value) {
+        void resize(size_type count, value_type const &value) noexcept {
             if (count <= size()) {
                 while (size() > count) {
                     pop_back();
@@ -428,7 +428,7 @@ namespace ntl {
             }
         }
 
-        void swap(vector &other) {
+        void swap(vector &other) noexcept {
             ntl::swap(begin_, other.begin_);
             ntl::swap(end_, other.end_);
             ntl::swap(capacity_, other.capacity_);
@@ -452,7 +452,7 @@ namespace ntl {
     };
 
     template<typename T, typename Allocator>
-    bool operator==(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator==(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         if (lhs.size() != rhs.size()) {
             return false;
         }
@@ -460,7 +460,7 @@ namespace ntl {
     }
 
     template<typename T, typename Allocator>
-    bool operator!=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator!=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         if (lhs.size() != rhs.size()) {
             return true;
         }
@@ -468,17 +468,17 @@ namespace ntl {
     }
 
     template<typename T, typename Allocator>
-    bool operator<(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator<(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
     template<typename T, typename Allocator>
-    bool operator<=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator<=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         return !(lhs > rhs);
     }
 
     template<typename T, typename Allocator>
-    bool operator>(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator>(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
             [](vector<T, Allocator>::const_iterator a, vector<T, Allocator>::const_iterator b) {
                 if (*a > *b)
@@ -490,7 +490,7 @@ namespace ntl {
     }
 
     template<typename T, typename Allocator>
-    bool operator>=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) {
+    bool operator>=(vector<T, Allocator> const &lhs, vector<T, Allocator> const &rhs) noexcept {
         return !(lhs < rhs);
     }
 

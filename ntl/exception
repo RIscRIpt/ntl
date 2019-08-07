@@ -13,7 +13,7 @@ namespace ntl {
 
     class out_of_range : public logic_error {
     public:
-        out_of_range(ssize_t lower_bound, ssize_t upper_bound, ssize_t value)
+        out_of_range(ssize_t lower_bound, ssize_t upper_bound, ssize_t value) noexcept
             : lower_bound(lower_bound)
             , upper_bound(upper_bound)
             , value(value)

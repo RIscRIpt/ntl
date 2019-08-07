@@ -69,35 +69,35 @@ namespace ntl {
         using reference = Reference;
         using iterator_category = Category;
 
-        iterator(pointer p)
+        iterator(pointer p) noexcept
             : p_(p)
         {}
 
-        constexpr operator pointer() const {
+        constexpr operator pointer() const noexcept {
             return p_;
         }
 
-        constexpr bool operator==(iterator const &rhs) {
+        constexpr bool operator==(iterator const &rhs) noexcept {
             return p_ == rhs.p_;
         }
 
-        constexpr bool operator!=(iterator const &rhs) {
+        constexpr bool operator!=(iterator const &rhs) noexcept {
             return p_ != rhs.p_;
         }
 
-        constexpr bool operator<(iterator const &rhs) {
+        constexpr bool operator<(iterator const &rhs) noexcept {
             return p_ < rhs.p_;
         }
 
-        constexpr bool operator<=(iterator const &rhs) {
+        constexpr bool operator<=(iterator const &rhs) noexcept {
             return p_ <= rhs.p_;
         }
 
-        constexpr bool operator>(iterator const &rhs) {
+        constexpr bool operator>(iterator const &rhs) noexcept {
             return p_ > rhs.p_;
         }
 
-        constexpr bool operator>=(iterator const &rhs) {
+        constexpr bool operator>=(iterator const &rhs) noexcept {
             return p_ >= rhs.p_;
         }
 
@@ -124,75 +124,75 @@ namespace ntl {
         >
     {
     public:
-        constexpr random_access_iterator()
+        constexpr random_access_iterator() noexcept
             : iterator(nullptr)
         {}
 
-        constexpr random_access_iterator(Pointer x)
+        constexpr random_access_iterator(Pointer x) noexcept
             : iterator(x)
         {}
 
-        constexpr random_access_iterator(random_access_iterator const &other)
+        constexpr random_access_iterator(random_access_iterator const &other) noexcept
             : iterator<random_access_iterator_tag, T, Distance, Pointer, Reference>(other.p_)
         {}
 
-        constexpr random_access_iterator& operator=(random_access_iterator const &other) {
+        constexpr random_access_iterator& operator=(random_access_iterator const &other) noexcept {
             p_ = other.p_;
             return *this;
         }
 
-        constexpr operator random_access_iterator<T const, Distance, T const*, T const&>() const {
+        constexpr operator random_access_iterator<T const, Distance, T const*, T const&>() const noexcept {
             return p_;
         }
 
-        constexpr T& operator*() const {
+        constexpr T& operator*() const noexcept {
             return *p_;
         }
 
-        constexpr Pointer operator->() const {
+        constexpr Pointer operator->() const noexcept {
             return p_;
         }
 
-        constexpr T& operator[](Distance n) const {
+        constexpr T& operator[](Distance n) const noexcept {
             return p_[n];
         }
 
-        constexpr random_access_iterator& operator++() {
+        constexpr random_access_iterator& operator++() noexcept {
             ++p_;
             return *this;
         }
 
-        constexpr random_access_iterator& operator--() {
+        constexpr random_access_iterator& operator--() noexcept {
             --p_;
             return *this;
         }
 
-        constexpr random_access_iterator operator++(int) {
+        constexpr random_access_iterator operator++(int) noexcept {
             auto t = p_;
             ++p_;
             return t;
         }
 
-        constexpr random_access_iterator operator--(int) {
+        constexpr random_access_iterator operator--(int) noexcept {
             auto t = p_;
             --p_;
             return t;
         }
 
-        constexpr random_access_iterator operator+(Distance n) const {
+        constexpr random_access_iterator operator+(Distance n) const noexcept {
             return p_ + n;
         }
 
-        constexpr random_access_iterator operator-(Distance n) const {
+        constexpr random_access_iterator operator-(Distance n) const noexcept {
             return p_ - n;
         }
 
-        constexpr random_access_iterator& operator+=(Distance n) {
+        constexpr random_access_iterator& operator+=(Distance n) noexcept {
             p_ += n;
             return *this;
         }
 
-        constexpr random_access_iterator& operator-=(Distance n) {
+        constexpr random_access_iterator& operator-=(Distance n) noexcept {
             p_ -= n;
             return *this;
         }
@@ -211,72 +211,72 @@ namespace ntl {
         using pointer = typename ntl::iterator_traits<iterator_type>::pointer;
         using reference = typename ntl::iterator_traits<iterator_type>::reference;
 
-        constexpr reverse_iterator() {}
-        constexpr reverse_iterator(iterator_type x) {
+        constexpr reverse_iterator() noexcept {}
+        constexpr reverse_iterator(iterator_type x) noexcept {
             base_ = x;
         }
 
-        constexpr reverse_iterator(reverse_iterator const &other)
+        constexpr reverse_iterator(reverse_iterator const &other) noexcept
             : base_(other.base_)
         {}
 
-        constexpr reverse_iterator& operator=(reverse_iterator const &other) {
+        constexpr reverse_iterator& operator=(reverse_iterator const &other) noexcept {
             base_ = other.base_;
         }
 
-        constexpr iterator_type base() const {
+        constexpr iterator_type base() const noexcept {
             return base_;
         }
 
-        constexpr reference operator*() const {
+        constexpr reference operator*() const noexcept {
             return *(base_ - 1);
         }
 
-        constexpr pointer operator->() const {
+        constexpr pointer operator->() const noexcept {
             return ntl::addressof(operator*());
         }
 
-        constexpr value_type& operator[](difference_type n) const {
+        constexpr value_type& operator[](difference_type n) const noexcept {
             return base_[-n - 1];
         }
 
 
-        constexpr reverse_iterator& operator++() {
+        constexpr reverse_iterator& operator++() noexcept {
             --base_;
             return *this;
         }
 
-        constexpr reverse_iterator& operator--() {
+        constexpr reverse_iterator& operator--() noexcept {
             ++base_;
             return *this;
         }
 
-        constexpr reverse_iterator operator++(int) {
+        constexpr reverse_iterator operator++(int) noexcept {
             auto t = base_;
             --base_;
             return t;
         }
 
-        constexpr reverse_iterator operator--(int) {
+        constexpr reverse_iterator operator--(int) noexcept {
             auto t = base_;
             ++base_;
             return t;
         }
 
-        constexpr reverse_iterator operator+(difference_type n) const {
+        constexpr reverse_iterator operator+(difference_type n) const noexcept {
             return base() - n;
         }
 
-        constexpr reverse_iterator operator-(difference_type n) const {
+        constexpr reverse_iterator operator-(difference_type n) const noexcept {
             return base() + n;
         }
 
-        constexpr reverse_iterator& operator+=(difference_type n) {
+        constexpr reverse_iterator& operator+=(difference_type n) noexcept {
             base_ -= n;
             return *this;
         }
 
-        constexpr reverse_iterator& operator-=(difference_type n) {
+        constexpr reverse_iterator& operator-=(difference_type n) noexcept {
             base_ += n;
             return *this;
         }
@@ -287,32 +287,32 @@ namespace ntl {
 
 
     template<typename I1, typename I2>
-    constexpr bool operator==(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator==(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() == rhs.base();
     }
 
     template<typename I1, typename I2>
-    constexpr bool operator!=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator!=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() != rhs.base();
     }
 
     template<typename I1, typename I2>
-    constexpr bool operator<(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator<(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() < rhs.base();
     }
 
     template<typename I1, typename I2>
-    constexpr bool operator<=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator<=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() <= rhs.base();
     }
 
     template<typename I1, typename I2>
-    constexpr bool operator>(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator>(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() > rhs.base();
     }
 
     template<typename I1, typename I2>
-    constexpr bool operator>=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) {
+    constexpr bool operator>=(reverse_iterator<I1> const &lhs, reverse_iterator<I2> const &rhs) noexcept {
         return lhs.base() >= rhs.base();
     }
 
@@ -320,7 +320,7 @@ namespace ntl {
 #pragma region operations
 
     template<typename II>
-    constexpr typename iterator_traits<II>::difference_type distance(II first, II last) {
+    constexpr typename iterator_traits<II>::difference_type distance(II first, II last) noexcept {
         if constexpr (is_same_v<random_access_iterator_tag, typename iterator_traits<II>::iterator_category>) {
             return last - first;
         } else {
