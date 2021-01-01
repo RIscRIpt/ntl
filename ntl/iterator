@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system"
+#include "memory"
 #include "type_traits"
 
 namespace ntl {
@@ -319,15 +320,51 @@ namespace ntl {
 #pragma endregion
 #pragma region operations
 
+    namespace detail {
+        template<class I>
+        constexpr void do_advance(I& it, typename iterator_traits<I>::difference_type n, input_iterator_tag) {
+            while (n > 0) {
+                --n;
+                ++it;
+            }
+        }
+
+        template<class I>
+        constexpr void do_advance(I& it, typename iterator_traits<I>::difference_type n, bidirectional_iterator_tag) {
+            while (n > 0) {
+                --n;
+                ++it;
+            }
+            while (n < 0) {
+                ++n;
+                --it;
+            }
+        }
+
+        template<class I>
+        constexpr void do_advance(I& it, typename iterator_traits<I>::difference_type n, random_access_iterator_tag) {
+            it += n;
+        }
+
+    }
+
+    template<class I, class D>
+    constexpr void advance(I& it, D n) {
+        detail::do_advance(it,
+                           typename iterator_traits<I>::difference_type(n),
+                           typename iterator_traits<I>::iterator_category());
+    }
+
     template<typename II>
     constexpr typename iterator_traits<II>::difference_type distance(II first, II last) noexcept {
         if constexpr (is_same_v<random_access_iterator_tag, typename iterator_traits<II>::iterator_category>) {
             return last - first;
-        } else {
+        }
+        else {
             static_assert(
                 is_same_v<random_access_iterator_tag, typename iterator_traits<II>::iterator_category>,
                 "TODO: support more types in ntl::distance"
-            );
+                );
         }
     }
 
