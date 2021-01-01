@@ -10,6 +10,7 @@
       <Filter>pch</Filter>
     </ClCompile>
     <ClCompile Include="vector.cpp" />
+    <ClCompile Include="algorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

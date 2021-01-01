@@ -1,7 +1,95 @@
 #pragma once
 
+#include "iterator"
+
 namespace ntl {
-    
+
+#pragma region lower_bound
+
+    template<class I, class T>
+    I lower_bound(I first, I last, const T& value) {
+        I it;
+        typename iterator_traits<I>::difference_type count, step;
+        count = distance(first, last);
+        while (count > 0) {
+            it = first;
+            step = count / 2;
+            advance(it, step);
+            if (*it < value) {
+                first = ++it;
+                count -= step + 1;
+            }
+            else {
+                count = step;
+            }
+        }
+        return first;
+    }
+
+    template<class I, class T, class BinaryPredicate>
+    I lower_bound(I first, I last, const T& value, BinaryPredicate p) {
+        I it;
+        typename iterator_traits<I>::difference_type count, step;
+        count = distance(first, last);
+        while (count > 0) {
+            it = first;
+            step = count / 2;
+            advance(it, step);
+            if (p(*it, value)) {
+                first = ++it;
+                count -= step + 1;
+            }
+            else {
+                count = step;
+            }
+        }
+        return first;
+    }
+
+#pragma endregion
+#pragma region upper_bound
+
+    template<class I, class T>
+    I upper_bound(I first, I last, const T& value) {
+        I it;
+        typename iterator_traits<I>::difference_type count, step;
+        count = distance(first, last);
+        while (count > 0) {
+            it = first;
+            step = count / 2;
+            advance(it, step);
+            if (!(value < *it)) {
+                first = ++it;
+                count -= step + 1;
+            }
+            else {
+                count = step;
+            }
+        }
+        return first;
+    }
+
+    template<class I, class T, class BinaryPredicate>
+    I upper_bound(I first, I last, const T& value, BinaryPredicate p) {
+        I it;
+        typename iterator_traits<I>::difference_type count, step;
+        count = distance(first, last);
+        while (count > 0) {
+            it = first;
+            step = count / 2;
+            advance(it, step);
+            if (!p(value, *it)) {
+                first = ++it;
+                count -= step + 1;
+            }
+            else {
+                count = step;
+            }
+        }
+        return first;
+    }
+
+#pragma endregion
 #pragma region equal
 
     template<typename II1, typename II2>
