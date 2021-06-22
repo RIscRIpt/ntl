@@ -1,3 +1,9 @@
+# Abandoned
+
+Abandoned in favor of directly using [STL](https://github.com/microsoft/STL) in WDM drivers.
+
+See [wdmcpp](https://github.com/RIscRIpt/wdmcpp) Visual Studio project example.
+
 # ntl
 
 **ntl** is very tiny and selective implementation of C++ Standard Library (which is sometimes mistakenly called STL) for Windows NT kernel mode drivers.
